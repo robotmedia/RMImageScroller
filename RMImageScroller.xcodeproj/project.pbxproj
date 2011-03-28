@@ -1,0 +1,318 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 45;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		1D3623260D0F684500981E51 /* RMImageScrollerAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D3623250D0F684500981E51 /* RMImageScrollerAppDelegate.m */; };
+		1D60589B0D05DD56006BFB54 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; };
+		1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
+		1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DF5F4DF0D08C38300B7A737 /* UIKit.framework */; };
+		288765A50DF7441C002DB57D /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 288765A40DF7441C002DB57D /* CoreGraphics.framework */; };
+		2899E5220DE3E06400AC0155 /* RMImageScrollerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2899E5210DE3E06400AC0155 /* RMImageScrollerViewController.xib */; };
+		28AD733F0D9D9553002E5188 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 28AD733E0D9D9553002E5188 /* MainWindow.xib */; };
+		28D7ACF80DDB3853001CB0EB /* RMImageScrollerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 28D7ACF70DDB3853001CB0EB /* RMImageScrollerViewController.m */; };
+		A060E6AE134072C4001B278D /* RMImageScroller.m in Sources */ = {isa = PBXBuildFile; fileRef = A060E6AD134072C4001B278D /* RMImageScroller.m */; };
+		A060E6E913407640001B278D /* yon_kuma_0.jpg in Resources */ = {isa = PBXBuildFile; fileRef = A060E6DF13407640001B278D /* yon_kuma_0.jpg */; };
+		A060E6EA13407640001B278D /* yon_kuma_1.jpg in Resources */ = {isa = PBXBuildFile; fileRef = A060E6E013407640001B278D /* yon_kuma_1.jpg */; };
+		A060E6EB13407640001B278D /* yon_kuma_2.jpg in Resources */ = {isa = PBXBuildFile; fileRef = A060E6E113407640001B278D /* yon_kuma_2.jpg */; };
+		A060E6EC13407640001B278D /* yon_kuma_3.jpg in Resources */ = {isa = PBXBuildFile; fileRef = A060E6E213407640001B278D /* yon_kuma_3.jpg */; };
+		A060E6ED13407640001B278D /* yon_kuma_4.jpg in Resources */ = {isa = PBXBuildFile; fileRef = A060E6E313407640001B278D /* yon_kuma_4.jpg */; };
+		A060E6EE13407640001B278D /* yon_kuma_5.jpg in Resources */ = {isa = PBXBuildFile; fileRef = A060E6E413407640001B278D /* yon_kuma_5.jpg */; };
+		A060E6EF13407640001B278D /* yon_kuma_6.jpg in Resources */ = {isa = PBXBuildFile; fileRef = A060E6E513407640001B278D /* yon_kuma_6.jpg */; };
+		A060E6F013407640001B278D /* yon_kuma_7.jpg in Resources */ = {isa = PBXBuildFile; fileRef = A060E6E613407640001B278D /* yon_kuma_7.jpg */; };
+		A060E6F113407640001B278D /* yon_kuma_8.jpg in Resources */ = {isa = PBXBuildFile; fileRef = A060E6E713407640001B278D /* yon_kuma_8.jpg */; };
+		A060E6F213407640001B278D /* yon_kuma_9.jpg in Resources */ = {isa = PBXBuildFile; fileRef = A060E6E813407640001B278D /* yon_kuma_9.jpg */; };
+		A060EB2B1340E6A2001B278D /* RMUIUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = A060EB2A1340E6A2001B278D /* RMUIUtils.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		1D30AB110D05D00D00671497 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		1D3623240D0F684500981E51 /* RMImageScrollerAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RMImageScrollerAppDelegate.h; path = ../Other/RMImageScrollerAppDelegate.h; sourceTree = "<group>"; };
+		1D3623250D0F684500981E51 /* RMImageScrollerAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RMImageScrollerAppDelegate.m; path = ../Other/RMImageScrollerAppDelegate.m; sourceTree = "<group>"; };
+		1D6058910D05DD3D006BFB54 /* RMImageScroller.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RMImageScroller.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		1DF5F4DF0D08C38300B7A737 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		288765A40DF7441C002DB57D /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		2899E5210DE3E06400AC0155 /* RMImageScrollerViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = RMImageScrollerViewController.xib; path = Other/RMImageScrollerViewController.xib; sourceTree = "<group>"; };
+		28AD733E0D9D9553002E5188 /* MainWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = MainWindow.xib; path = Other/MainWindow.xib; sourceTree = "<group>"; };
+		28D7ACF60DDB3853001CB0EB /* RMImageScrollerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RMImageScrollerViewController.h; path = ../Other/RMImageScrollerViewController.h; sourceTree = "<group>"; };
+		28D7ACF70DDB3853001CB0EB /* RMImageScrollerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RMImageScrollerViewController.m; path = ../Other/RMImageScrollerViewController.m; sourceTree = "<group>"; };
+		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = Other/main.m; sourceTree = "<group>"; };
+		A060E6AC134072C4001B278D /* RMImageScroller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RMImageScroller.h; sourceTree = "<group>"; };
+		A060E6AD134072C4001B278D /* RMImageScroller.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RMImageScroller.m; sourceTree = "<group>"; };
+		A060E6DF13407640001B278D /* yon_kuma_0.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = yon_kuma_0.jpg; path = Other/yon_kuma_0.jpg; sourceTree = "<group>"; };
+		A060E6E013407640001B278D /* yon_kuma_1.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = yon_kuma_1.jpg; path = Other/yon_kuma_1.jpg; sourceTree = "<group>"; };
+		A060E6E113407640001B278D /* yon_kuma_2.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = yon_kuma_2.jpg; path = Other/yon_kuma_2.jpg; sourceTree = "<group>"; };
+		A060E6E213407640001B278D /* yon_kuma_3.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = yon_kuma_3.jpg; path = Other/yon_kuma_3.jpg; sourceTree = "<group>"; };
+		A060E6E313407640001B278D /* yon_kuma_4.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = yon_kuma_4.jpg; path = Other/yon_kuma_4.jpg; sourceTree = "<group>"; };
+		A060E6E413407640001B278D /* yon_kuma_5.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = yon_kuma_5.jpg; path = Other/yon_kuma_5.jpg; sourceTree = "<group>"; };
+		A060E6E513407640001B278D /* yon_kuma_6.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = yon_kuma_6.jpg; path = Other/yon_kuma_6.jpg; sourceTree = "<group>"; };
+		A060E6E613407640001B278D /* yon_kuma_7.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = yon_kuma_7.jpg; path = Other/yon_kuma_7.jpg; sourceTree = "<group>"; };
+		A060E6E713407640001B278D /* yon_kuma_8.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = yon_kuma_8.jpg; path = Other/yon_kuma_8.jpg; sourceTree = "<group>"; };
+		A060E6E813407640001B278D /* yon_kuma_9.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = yon_kuma_9.jpg; path = Other/yon_kuma_9.jpg; sourceTree = "<group>"; };
+		A060EB291340E6A2001B278D /* RMUIUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RMUIUtils.h; sourceTree = "<group>"; };
+		A060EB2A1340E6A2001B278D /* RMUIUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RMUIUtils.m; sourceTree = "<group>"; };
+		A060EC071340E8FD001B278D /* RMImageScroller_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RMImageScroller_Prefix.pch; sourceTree = "<group>"; };
+		A060EC081340E905001B278D /* RMImageScroller-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "RMImageScroller-Info.plist"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		1D60588F0D05DD3D006BFB54 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */,
+				1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */,
+				288765A50DF7441C002DB57D /* CoreGraphics.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		080E96DDFE201D6D7F000001 /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				A060E6AC134072C4001B278D /* RMImageScroller.h */,
+				A060E6AD134072C4001B278D /* RMImageScroller.m */,
+				1D3623240D0F684500981E51 /* RMImageScrollerAppDelegate.h */,
+				1D3623250D0F684500981E51 /* RMImageScrollerAppDelegate.m */,
+				28D7ACF60DDB3853001CB0EB /* RMImageScrollerViewController.h */,
+				28D7ACF70DDB3853001CB0EB /* RMImageScrollerViewController.m */,
+				A060EB291340E6A2001B278D /* RMUIUtils.h */,
+				A060EB2A1340E6A2001B278D /* RMUIUtils.m */,
+			);
+			path = Classes;
+			sourceTree = "<group>";
+		};
+		19C28FACFE9D520D11CA2CBB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1D6058910D05DD3D006BFB54 /* RMImageScroller.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		29B97314FDCFA39411CA2CEA /* CustomTemplate */ = {
+			isa = PBXGroup;
+			children = (
+				080E96DDFE201D6D7F000001 /* Classes */,
+				29B97315FDCFA39411CA2CEA /* Other Sources */,
+				29B97317FDCFA39411CA2CEA /* Resources */,
+				29B97323FDCFA39411CA2CEA /* Frameworks */,
+				19C28FACFE9D520D11CA2CBB /* Products */,
+			);
+			name = CustomTemplate;
+			sourceTree = "<group>";
+		};
+		29B97315FDCFA39411CA2CEA /* Other Sources */ = {
+			isa = PBXGroup;
+			children = (
+				A060EC071340E8FD001B278D /* RMImageScroller_Prefix.pch */,
+				29B97316FDCFA39411CA2CEA /* main.m */,
+			);
+			name = "Other Sources";
+			sourceTree = "<group>";
+		};
+		29B97317FDCFA39411CA2CEA /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				A060EC081340E905001B278D /* RMImageScroller-Info.plist */,
+				A060E6DA13407631001B278D /* thumbnails */,
+				2899E5210DE3E06400AC0155 /* RMImageScrollerViewController.xib */,
+				28AD733E0D9D9553002E5188 /* MainWindow.xib */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				1DF5F4DF0D08C38300B7A737 /* UIKit.framework */,
+				1D30AB110D05D00D00671497 /* Foundation.framework */,
+				288765A40DF7441C002DB57D /* CoreGraphics.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		A060E6DA13407631001B278D /* thumbnails */ = {
+			isa = PBXGroup;
+			children = (
+				A060E6DF13407640001B278D /* yon_kuma_0.jpg */,
+				A060E6E013407640001B278D /* yon_kuma_1.jpg */,
+				A060E6E113407640001B278D /* yon_kuma_2.jpg */,
+				A060E6E213407640001B278D /* yon_kuma_3.jpg */,
+				A060E6E313407640001B278D /* yon_kuma_4.jpg */,
+				A060E6E413407640001B278D /* yon_kuma_5.jpg */,
+				A060E6E513407640001B278D /* yon_kuma_6.jpg */,
+				A060E6E613407640001B278D /* yon_kuma_7.jpg */,
+				A060E6E713407640001B278D /* yon_kuma_8.jpg */,
+				A060E6E813407640001B278D /* yon_kuma_9.jpg */,
+			);
+			name = thumbnails;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		1D6058900D05DD3D006BFB54 /* RMImageScroller */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1D6058960D05DD3E006BFB54 /* Build configuration list for PBXNativeTarget "RMImageScroller" */;
+			buildPhases = (
+				1D60588D0D05DD3D006BFB54 /* Resources */,
+				1D60588E0D05DD3D006BFB54 /* Sources */,
+				1D60588F0D05DD3D006BFB54 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = RMImageScroller;
+			productName = RMImageScroller;
+			productReference = 1D6058910D05DD3D006BFB54 /* RMImageScroller.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		29B97313FDCFA39411CA2CEA /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "RMImageScroller" */;
+			compatibilityVersion = "Xcode 3.1";
+			developmentRegion = English;
+			hasScannedForEncodings = 1;
+			knownRegions = (
+				English,
+				Japanese,
+				French,
+				German,
+			);
+			mainGroup = 29B97314FDCFA39411CA2CEA /* CustomTemplate */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				1D6058900D05DD3D006BFB54 /* RMImageScroller */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		1D60588D0D05DD3D006BFB54 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				28AD733F0D9D9553002E5188 /* MainWindow.xib in Resources */,
+				2899E5220DE3E06400AC0155 /* RMImageScrollerViewController.xib in Resources */,
+				A060E6E913407640001B278D /* yon_kuma_0.jpg in Resources */,
+				A060E6EA13407640001B278D /* yon_kuma_1.jpg in Resources */,
+				A060E6EB13407640001B278D /* yon_kuma_2.jpg in Resources */,
+				A060E6EC13407640001B278D /* yon_kuma_3.jpg in Resources */,
+				A060E6ED13407640001B278D /* yon_kuma_4.jpg in Resources */,
+				A060E6EE13407640001B278D /* yon_kuma_5.jpg in Resources */,
+				A060E6EF13407640001B278D /* yon_kuma_6.jpg in Resources */,
+				A060E6F013407640001B278D /* yon_kuma_7.jpg in Resources */,
+				A060E6F113407640001B278D /* yon_kuma_8.jpg in Resources */,
+				A060E6F213407640001B278D /* yon_kuma_9.jpg in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		1D60588E0D05DD3D006BFB54 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1D60589B0D05DD56006BFB54 /* main.m in Sources */,
+				1D3623260D0F684500981E51 /* RMImageScrollerAppDelegate.m in Sources */,
+				28D7ACF80DDB3853001CB0EB /* RMImageScrollerViewController.m in Sources */,
+				A060E6AE134072C4001B278D /* RMImageScroller.m in Sources */,
+				A060EB2B1340E6A2001B278D /* RMUIUtils.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		1D6058940D05DD3E006BFB54 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = RMImageScroller_Prefix.pch;
+				INFOPLIST_FILE = "RMImageScroller-Info.plist";
+				PRODUCT_NAME = RMImageScroller;
+			};
+			name = Debug;
+		};
+		1D6058950D05DD3E006BFB54 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = RMImageScroller_Prefix.pch;
+				INFOPLIST_FILE = "RMImageScroller-Info.plist";
+				PRODUCT_NAME = RMImageScroller;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		C01FCF4F08A954540054247B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				PREBINDING = NO;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		C01FCF5008A954540054247B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				PREBINDING = NO;
+				SDKROOT = iphoneos;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1D6058960D05DD3E006BFB54 /* Build configuration list for PBXNativeTarget "RMImageScroller" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1D6058940D05DD3E006BFB54 /* Debug */,
+				1D6058950D05DD3E006BFB54 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C01FCF4E08A954540054247B /* Build configuration list for PBXProject "RMImageScroller" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C01FCF4F08A954540054247B /* Debug */,
+				C01FCF5008A954540054247B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 29B97313FDCFA39411CA2CEA /* Project object */;
+}
