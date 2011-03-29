@@ -30,8 +30,9 @@
 	UISlider *slider;
 
 	// State
-	BOOL scrollChangeRequestedBySlider;
 	NSMutableSet* recycledViews;
+	BOOL scrollChangeRequestedBySlider;
+	BOOL scrollerFrameNeedsLayout;
 	NSMutableSet* visibleViews;
 	
 	// Configuration

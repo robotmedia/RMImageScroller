@@ -130,10 +130,6 @@
 		
 		self.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.5];
 		slider = [[UISlider alloc] init];
-		slider.frame = CGRectMake(self.padding, 
-								  self.frame.size.height - kImageScrollerSliderHeight - self.padding, 
-								  self.frame.size.width - self.padding * 2,
-								  kImageScrollerSliderHeight);
 		slider.backgroundColor = [UIColor clearColor];
 		slider.autoresizingMask = UIViewAutoresizingFlexibleWidth;
 		slider.minimumValue = 1;
@@ -141,11 +137,7 @@
 		[self addSubview:slider];
 
 		scroller = [[UIScrollView alloc] init];
-		int scrollerHeight = slider.frame.origin.y - self.padding * 2;
-		scroller.frame = CGRectMake(0,
-									self.padding,
-									self.frame.size.width, 
-									scrollerHeight);			
+		scrollerFrameNeedsLayout = YES;
 		scroller.backgroundColor = [UIColor clearColor];
 		scroller.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 		scroller.delegate = self;
@@ -157,6 +149,15 @@
 
 - (void) layoutSubviews {
 	slider.hidden = hideSlider;
+	slider.frame = CGRectMake(self.padding, 
+							  self.frame.size.height - kImageScrollerSliderHeight - self.padding, 
+							  self.frame.size.width - self.padding * 2,
+							  kImageScrollerSliderHeight);
+	if (scrollerFrameNeedsLayout) {
+		int scrollerHeight = (hideSlider ? self.frame.size.height : slider.frame.origin.y) - self.padding * 2;
+		scroller.frame = CGRectMake(0, self.padding, self.frame.size.width, scrollerHeight);
+		scrollerFrameNeedsLayout = NO; // Avoid setting the scroller frame on scroll changes
+	}
 	int count = [self tileCount];
 	int contentWidth = count * [self tileWidth];
 	contentWidth += count * separatorWidth;
@@ -191,11 +192,14 @@
 
 - (void) setHideSlider:(BOOL)value {
 	hideSlider = value;
-	int scrollerHeight = (hideSlider ? self.frame.size.height : slider.frame.origin.y) - self.padding * 2;
-	scroller.frame = CGRectMake(scroller.frame.origin.x,
-								scroller.frame.origin.y,
-								scroller.frame.size.width, 
-								scrollerHeight);		
+	scrollerFrameNeedsLayout = YES;
+	[self setNeedsLayout];
+}
+
+- (void) setPadding:(int)value {
+	padding = value;
+	scrollerFrameNeedsLayout = YES;
+	[self setNeedsLayout];
 }
 
 - (void) setSpreadMode:(BOOL)value {
