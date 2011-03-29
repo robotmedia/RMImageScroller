@@ -24,7 +24,6 @@
 #import "RMUIUtils.h"
 #import <QuartzCore/QuartzCore.h>
 
-#define kImageScrollerContentMargin 10
 #define kImageScrollerSliderHeight 23
 #define kImageScrollerTitlePadding 5
 #define kImageScrollerTitleMargin 5
@@ -131,9 +130,9 @@
 		
 		self.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.5];
 		slider = [[UISlider alloc] init];
-		slider.frame = CGRectMake(kImageScrollerContentMargin, 
-								  self.frame.size.height - kImageScrollerSliderHeight - kImageScrollerContentMargin, 
-								  self.frame.size.width - kImageScrollerContentMargin * 2,
+		slider.frame = CGRectMake(self.padding, 
+								  self.frame.size.height - kImageScrollerSliderHeight - self.padding, 
+								  self.frame.size.width - self.padding * 2,
 								  kImageScrollerSliderHeight);
 		slider.backgroundColor = [UIColor clearColor];
 		slider.autoresizingMask = UIViewAutoresizingFlexibleWidth;
@@ -142,9 +141,9 @@
 		[self addSubview:slider];
 
 		scroller = [[UIScrollView alloc] init];
-		int scrollerHeight = slider.frame.origin.y - kImageScrollerContentMargin * 2;
+		int scrollerHeight = slider.frame.origin.y - self.padding * 2;
 		scroller.frame = CGRectMake(0,
-									kImageScrollerContentMargin,
+									self.padding,
 									self.frame.size.width, 
 									scrollerHeight);			
 		scroller.backgroundColor = [UIColor clearColor];
@@ -161,7 +160,7 @@
 	int count = [self tileCount];
 	int contentWidth = count * [self tileWidth];
 	contentWidth += count * separatorWidth;
-	contentWidth += kImageScrollerContentMargin * 2;
+	contentWidth += self.padding * 2;
 	scroller.contentSize = CGSizeMake(contentWidth, scroller.frame.size.height);
 	[self tile];
 }
@@ -192,7 +191,7 @@
 
 - (void) setHideSlider:(BOOL)value {
 	hideSlider = value;
-	int scrollerHeight = (hideSlider ? self.frame.size.height : slider.frame.origin.y) - kImageScrollerContentMargin * 2;
+	int scrollerHeight = (hideSlider ? self.frame.size.height : slider.frame.origin.y) - self.padding * 2;
 	scroller.frame = CGRectMake(scroller.frame.origin.x,
 								scroller.frame.origin.y,
 								scroller.frame.size.width, 
@@ -235,8 +234,8 @@
 
 - (CGRect) frameForIndex:(int)index {
 	int tileWidth = [self tileWidth];
-    CGRect tileFrame = CGRectMake(0, 0, tileWidth, scroller.frame.size.height - 2*kImageScrollerContentMargin);
-	tileFrame.origin.x = kImageScrollerContentMargin + (tileWidth + separatorWidth) * index;
+    CGRect tileFrame = CGRectMake(0, 0, tileWidth, scroller.frame.size.height - 2*self.padding);
+	tileFrame.origin.x = self.padding + (tileWidth + separatorWidth) * index;
     return tileFrame;
 }
 
@@ -263,7 +262,7 @@
 - (int) indexForX:(int)originX {
 	int count = [self tileCount];
 	int tileWidth = [self tileWidth];
-	int firstTileWidth = kImageScrollerContentMargin + tileWidth;
+	int firstTileWidth = self.padding + tileWidth;
 	int otherTileWidth = tileWidth + separatorWidth;
 
 	int index;
@@ -314,7 +313,7 @@
 
 - (void) scrollToIndex:(int)index {
 	int tileWidth = [self tileWidth];
-	int x = kImageScrollerContentMargin + (tileWidth + separatorWidth) * index;
+	int x = self.padding + (tileWidth + separatorWidth) * index;
 	x -= scroller.frame.size.width / 2 - tileWidth / 2 - separatorWidth / 2;
 	scroller.contentOffset = CGPointMake(x, 0);
 }
@@ -400,6 +399,7 @@
 @synthesize hideTitles;
 @synthesize imageWidth;
 @synthesize	imageHeight;
+@synthesize padding;
 @synthesize separatorWidth;
 @synthesize spreadMode;
 

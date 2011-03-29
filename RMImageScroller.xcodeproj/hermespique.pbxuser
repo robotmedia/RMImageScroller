@@ -30,8 +30,8 @@
 	28D7ACF70DDB3853001CB0EB /* RMImageScrollerViewController.m */ = {
 		uiCtxt = {
 			sepNavIntBoundsRect = "{{0, 0}, {840, 1118}}";
-			sepNavSelRange = "{3, 36}";
-			sepNavVisRange = "{0, 1313}";
+			sepNavSelRange = "{389, 0}";
+			sepNavVisRange = "{0, 1311}";
 		};
 	};
 	29B97313FDCFA39411CA2CEA /* Project object */ = {
@@ -92,8 +92,8 @@
 					PBXFileDataSource_Warnings_ColumnID,
 				);
 			};
-			PBXPerProjectTemplateStateSaveDate = 323050741;
-			PBXWorkspaceStateSaveDate = 323050741;
+			PBXPerProjectTemplateStateSaveDate = 323056965;
+			PBXWorkspaceStateSaveDate = 323056965;
 		};
 		perUserProjectItems = {
 			A060E6F513407680001B278D = A060E6F513407680001B278D /* PBXBookmark */;
@@ -117,10 +117,10 @@
 			A0713FD913415A89004F4D31 = A0713FD913415A89004F4D31 /* PBXTextBookmark */;
 			A0713FDA13415A89004F4D31 = A0713FDA13415A89004F4D31 /* PBXTextBookmark */;
 			A0713FDB13415A89004F4D31 = A0713FDB13415A89004F4D31 /* PBXTextBookmark */;
-			A0713FDC13415A89004F4D31 = A0713FDC13415A89004F4D31 /* PBXTextBookmark */;
-			A0713FDD13415A89004F4D31 = A0713FDD13415A89004F4D31 /* PBXTextBookmark */;
-			A0713FE513415D01004F4D31 /* PBXTextBookmark */ = A0713FE513415D01004F4D31 /* PBXTextBookmark */;
-			A0713FE613415D01004F4D31 /* PBXTextBookmark */ = A0713FE613415D01004F4D31 /* PBXTextBookmark */;
+			A0713FE513415D01004F4D31 = A0713FE513415D01004F4D31 /* PBXTextBookmark */;
+			A0713FF413416288004F4D31 = A0713FF413416288004F4D31 /* PBXTextBookmark */;
+			A07BED8B1341760D001FB872 /* PBXTextBookmark */ = A07BED8B1341760D001FB872 /* PBXTextBookmark */;
+			A07BED8C1341760D001FB872 /* PBXTextBookmark */ = A07BED8C1341760D001FB872 /* PBXTextBookmark */;
 		};
 		sourceControlManager = A060E6A913407290001B278D /* Source Control */;
 		userBuildSettings = {
@@ -181,16 +181,17 @@
 	};
 	A060E6AC134072C4001B278D /* RMImageScroller.h */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {840, 897}}";
-			sepNavSelRange = "{0, 869}";
-			sepNavVisRange = "{0, 1121}";
+			sepNavIntBoundsRect = "{{0, 0}, {840, 936}}";
+			sepNavSelRange = "{1263, 13}";
+			sepNavVisRange = "{726, 962}";
 		};
 	};
 	A060E6AD134072C4001B278D /* RMImageScroller.m */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {840, 5304}}";
-			sepNavSelRange = "{25, 844}";
-			sepNavVisRange = "{0, 1220}";
+			sepNavIntBoundsRect = "{{0, 0}, {1013, 5239}}";
+			sepNavSelRange = "{3863, 0}";
+			sepNavVisRange = "{11312, 870}";
+			sepNavWindowFrame = "{{15, 62}, {1089, 711}}";
 		};
 	};
 	A060E6F513407680001B278D /* PBXBookmark */ = {
@@ -373,26 +374,6 @@
 		vrLen = 1092;
 		vrLoc = 0;
 	};
-	A0713FDC13415A89004F4D31 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = 28D7ACF70DDB3853001CB0EB /* RMImageScrollerViewController.m */;
-		name = "RMImageScrollerViewController.m: 21";
-		rLen = 0;
-		rLoc = 883;
-		rType = 0;
-		vrLen = 1311;
-		vrLoc = 0;
-	};
-	A0713FDD13415A89004F4D31 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = 28D7ACF70DDB3853001CB0EB /* RMImageScrollerViewController.m */;
-		name = "RMImageScrollerViewController.m: 21";
-		rLen = 0;
-		rLoc = 883;
-		rType = 0;
-		vrLen = 1313;
-		vrLoc = 0;
-	};
 	A0713FE513415D01004F4D31 /* PBXTextBookmark */ = {
 		isa = PBXTextBookmark;
 		fRef = 28D7ACF70DDB3853001CB0EB /* RMImageScrollerViewController.m */;
@@ -403,14 +384,31 @@
 		vrLen = 1313;
 		vrLoc = 0;
 	};
-	A0713FE613415D01004F4D31 /* PBXTextBookmark */ = {
+	A0713FF413416288004F4D31 /* PBXTextBookmark */ = {
 		isa = PBXTextBookmark;
 		fRef = 28D7ACF70DDB3853001CB0EB /* RMImageScrollerViewController.m */;
-		name = "RMImageScrollerViewController.m: 2";
-		rLen = 36;
-		rLoc = 3;
+		name = "RMImageScrollerViewController.m: 20";
+		rLen = 0;
+		rLoc = 756;
 		rType = 0;
 		vrLen = 1313;
 		vrLoc = 0;
+	};
+	A07BED8B1341760D001FB872 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = A060E6AD134072C4001B278D /* RMImageScroller.m */;
+		rLen = 12;
+		rLoc = 9548;
+		rType = 0;
+	};
+	A07BED8C1341760D001FB872 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = A060E6AD134072C4001B278D /* RMImageScroller.m */;
+		name = "RMImageScroller.m: 316";
+		rLen = 0;
+		rLoc = 9560;
+		rType = 0;
+		vrLen = 373;
+		vrLoc = 9539;
 	};
 }

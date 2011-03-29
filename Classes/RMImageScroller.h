@@ -39,6 +39,7 @@
 	BOOL spreadMode;
 	BOOL hideSlider;
 	BOOL hideTitles;
+	int padding;
 	int imageWidth;
 	int imageHeight;
 	int separatorWidth;
@@ -50,6 +51,7 @@
 @property (nonatomic, assign) BOOL hideTitles;
 @property (nonatomic, assign) int imageWidth;
 @property (nonatomic, assign) int imageHeight;
+@property (nonatomic, assign) int padding;
 @property (nonatomic, assign) int separatorWidth;
 
 - (void) setSelectedIndex:(int)index;

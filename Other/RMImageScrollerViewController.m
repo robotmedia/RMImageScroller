@@ -36,6 +36,7 @@
 	scroller = [[RMImageScroller alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 240)];
 	scroller.autoresizingMask = UIViewAutoresizingFlexibleWidth;
 	scroller.delegate = self;
+	scroller.padding = 10; // Default value: 0
 	scroller.separatorWidth = 10; // Default value: 0
 	scroller.imageWidth = 100; // Default value: 100
 	scroller.imageHeight = 150; // Default value: as tall as possible within the frame
