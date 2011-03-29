@@ -42,7 +42,7 @@
 	scroller.imageHeight = 150; // Default value: as tall as possible within the frame
 	scroller.hideTitles = NO; // Default value: NO
 	scroller.hideSlider = NO; // Default value: NO
-	scroller.spreadMode = YES; // Default value: NO
+	scroller.spreadMode = NO; // Default value: NO
 	[self.view addSubview:scroller];
 }
 
@@ -53,9 +53,15 @@
     return YES;
 }
 
+- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
+	NSLog(@"hola");
+	scroller.spreadMode = UIInterfaceOrientationIsLandscape(self.interfaceOrientation);
+}
+
+
 - (void)dealloc {
-	[scroller dealloc];
-	[selectedImage dealloc];
+	[scroller release];
+	[selectedImage release];
     [super dealloc];
 }
 

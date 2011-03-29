@@ -87,9 +87,9 @@
 }
 
 - (void)dealloc {
-	[button dealloc];
-	[imageView dealloc];
-	[title dealloc];
+	[button release];
+	[imageView release];
+	[title release];
     [super dealloc];
 }
 
@@ -167,10 +167,10 @@
 }
 
 - (void)dealloc {
-	[recycledViews dealloc];
-	[scroller dealloc];
-	[slider dealloc];
-	[visibleViews dealloc];
+	[recycledViews release];
+	[scroller release];
+	[slider release];
+	[visibleViews release];
     [super dealloc];
 }
 
@@ -204,7 +204,13 @@
 
 - (void) setSpreadMode:(BOOL)value {
 	spreadMode	= value;
+	for (RMScrollerTile* v in visibleViews) {
+		[v removeFromSuperview];
+	}
+	[visibleViews removeAllObjects];
+	[recycledViews removeAllObjects];
 	slider.maximumValue = [self tileCount];
+	[self setNeedsLayout];
 }
 
 # pragma mark Private
@@ -346,7 +352,7 @@
             [self configure:v forIndex:index];
             [scroller addSubview:v];
             [visibleViews addObject:v];
-        }
+		}
     }    
 }
 

@@ -15,6 +15,7 @@
 		2899E5220DE3E06400AC0155 /* RMImageScrollerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2899E5210DE3E06400AC0155 /* RMImageScrollerViewController.xib */; };
 		28AD733F0D9D9553002E5188 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 28AD733E0D9D9553002E5188 /* MainWindow.xib */; };
 		28D7ACF80DDB3853001CB0EB /* RMImageScrollerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 28D7ACF70DDB3853001CB0EB /* RMImageScrollerViewController.m */; };
+		A01269101342521C005F9027 /* MainWindow-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = A012690F1342521C005F9027 /* MainWindow-iPad.xib */; };
 		A060E6AE134072C4001B278D /* RMImageScroller.m in Sources */ = {isa = PBXBuildFile; fileRef = A060E6AD134072C4001B278D /* RMImageScroller.m */; };
 		A060E6E913407640001B278D /* yon_kuma_0.jpg in Resources */ = {isa = PBXBuildFile; fileRef = A060E6DF13407640001B278D /* yon_kuma_0.jpg */; };
 		A060E6EA13407640001B278D /* yon_kuma_1.jpg in Resources */ = {isa = PBXBuildFile; fileRef = A060E6E013407640001B278D /* yon_kuma_1.jpg */; };
@@ -41,6 +42,7 @@
 		28D7ACF60DDB3853001CB0EB /* RMImageScrollerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RMImageScrollerViewController.h; path = Other/RMImageScrollerViewController.h; sourceTree = "<group>"; };
 		28D7ACF70DDB3853001CB0EB /* RMImageScrollerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RMImageScrollerViewController.m; path = Other/RMImageScrollerViewController.m; sourceTree = "<group>"; };
 		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = Other/main.m; sourceTree = "<group>"; };
+		A012690F1342521C005F9027 /* MainWindow-iPad.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = "MainWindow-iPad.xib"; path = "Resources-iPad/Other/MainWindow-iPad.xib"; sourceTree = "<group>"; };
 		A060E6AC134072C4001B278D /* RMImageScroller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RMImageScroller.h; sourceTree = "<group>"; };
 		A060E6AD134072C4001B278D /* RMImageScroller.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RMImageScroller.m; sourceTree = "<group>"; };
 		A060E6DF13407640001B278D /* yon_kuma_0.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = yon_kuma_0.jpg; path = Other/yon_kuma_0.jpg; sourceTree = "<group>"; };
@@ -99,6 +101,7 @@
 				080E96DDFE201D6D7F000001 /* Classes */,
 				29B97315FDCFA39411CA2CEA /* Other Sources */,
 				29B97317FDCFA39411CA2CEA /* Resources */,
+				A012690E1342521B005F9027 /* Resources-iPad */,
 				29B97323FDCFA39411CA2CEA /* Frameworks */,
 				19C28FACFE9D520D11CA2CBB /* Products */,
 			);
@@ -135,6 +138,14 @@
 				288765A40DF7441C002DB57D /* CoreGraphics.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		A012690E1342521B005F9027 /* Resources-iPad */ = {
+			isa = PBXGroup;
+			children = (
+				A012690F1342521C005F9027 /* MainWindow-iPad.xib */,
+			);
+			name = "Resources-iPad";
 			sourceTree = "<group>";
 		};
 		A060E6DA13407631001B278D /* thumbnails */ = {
@@ -224,6 +235,7 @@
 				A060E6F013407640001B278D /* yon_kuma_7.jpg in Resources */,
 				A060E6F113407640001B278D /* yon_kuma_8.jpg in Resources */,
 				A060E6F213407640001B278D /* yon_kuma_9.jpg in Resources */,
+				A01269101342521C005F9027 /* MainWindow-iPad.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -249,6 +261,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				COPY_PHASE_STRIP = NO;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -256,6 +269,8 @@
 				GCC_PREFIX_HEADER = RMImageScroller_Prefix.pch;
 				INFOPLIST_FILE = "RMImageScroller-Info.plist";
 				PRODUCT_NAME = RMImageScroller;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
@@ -263,11 +278,14 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				COPY_PHASE_STRIP = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = RMImageScroller_Prefix.pch;
 				INFOPLIST_FILE = "RMImageScroller-Info.plist";
 				PRODUCT_NAME = RMImageScroller;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
