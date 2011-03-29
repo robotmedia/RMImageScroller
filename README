@@ -1,1 +1,49 @@
-Hello world!
+RMImageScroller
+By Robot Media - http://www.robotmedia.net
+
+Overview
+========
+
+RMImageScroller is an image scroller for iOS 3.2 or later. It is typically used to show thumbnails for a sequential viewer. It supports iPhone, iPad and all screen orientations.
+
+A sample project is included.
+
+How to use
+==========
+
+1. Copy the contents of /Classes to your project. You will need both RMImageScroller and RMUIUtils (.h and .m).
+
+2. Import "RMImageScroller.h" in the necessary files.
+
+3. Provide a delegate for the scroller that conforms to the RMImageScrollerDelegate protocol defined in RMImageScroller.h. Refer to RMImageScrollerViewController of the sample project for an implementation example.
+
+Sample
+======
+
+RMImageScrollerViewController uses RMViewController to show various thumbnails in spread mode. Tapping on an image displays it on the background.
+
+Sample thumbnails from the most excellent comic Bear Beater Bunyan by Josh Hechinger & Jorge F. Mu–oz.
+
+Contact
+=======
+
+Web: http://www.robotmedia.net
+Twitter: robot_media
+
+License
+=======
+
+Copyright 2011 Robot Media SL. All rights reserved.
+
+RMImageScroller is free software: you can redistribute it and/or modify
+it under the terms of the GNU Lesser Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+RMImageScroller is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Lesser Public License for more details.
+
+You should have received a copy of the GNU Lesser Public License
+along with RMImageScroller.  If not, see <http://www.gnu.org/licenses/>.
