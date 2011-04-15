@@ -102,6 +102,8 @@
 
 @interface RMImageScroller(Private)
 
+- (int) calculateCenteredIndex;
+- (void) centeredImageChanged;
 - (void) configure:(RMScrollerTile*)view forIndex:(int)index;
 - (RMScrollerTile*) dequeueRecycledView;
 - (CGRect) frameForIndex:(int)index;
@@ -116,7 +118,6 @@
 - (int) tileWidth;
 - (NSString*) titleForIndex:(int)index;
 - (NSString*) titleForImageIndex:(int)index;
-- (void) updateSliderAfterScroll;
 
 @end
 
@@ -179,7 +180,7 @@
 - (void) scrollViewDidScroll:(UIScrollView *)scrollView {
 	[self tile];
 	if (!scrollChangeRequestedBySlider) {
-		[self updateSliderAfterScroll];
+        slider.value = [self calculateCenteredIndex] + 1;
 	}
 }
 
@@ -214,6 +215,18 @@
 }
 
 # pragma mark Private
+
+- (int) calculateCenteredIndex {
+    int centerX = scroller.contentOffset.x + (scroller.frame.size.width / 2);
+	return [self indexForX:centerX];
+}
+
+- (void) centeredImageChanged {
+    if ([delegate respondsToSelector:@selector(imageScroller:centeredImageChanged:)]) {
+        int delegateIndex = spreadMode ? centeredIndex * 2 : centeredIndex;
+        [delegate imageScroller:self centeredImageChanged:delegateIndex];
+    }
+}
 
 - (void) configure:(RMScrollerTile*)v forIndex:(int)index {
     v.index = index;
@@ -332,7 +345,7 @@
     CGRect visibleBounds = scroller.bounds;
 	int firstIndex = [self indexForX:CGRectGetMinX(visibleBounds)];
 	int lastIndex = [self indexForX:CGRectGetMaxX(visibleBounds)];
-	
+    	
     // Recycle no-longer-visible images 
     for (RMScrollerTile *v in visibleViews) {
         if (v.index < firstIndex || v.index > lastIndex) {
@@ -353,7 +366,15 @@
             [scroller addSubview:v];
             [visibleViews addObject:v];
 		}
-    }    
+    }
+    
+    // Update centered index
+    int newCenteredIndex = [self calculateCenteredIndex];
+    if (centeredIndex != newCenteredIndex) {
+        centeredIndex = newCenteredIndex;
+        [self centeredImageChanged];
+    }
+
 }
 
 - (int) tileCount {
@@ -388,13 +409,6 @@
 		}
 	}
 	return [NSString stringWithFormat:@"%d", index + 1];
-}
-
-- (void) updateSliderAfterScroll {
-	CGRect visibleBounds = scroller.bounds;
-	int firstIndex = [self indexForX:CGRectGetMinX(visibleBounds)];
-	int lastIndex = [self indexForX:CGRectGetMaxX(visibleBounds)];
-	slider.value = round((firstIndex + lastIndex + 2) / 2);
 }
 
 #pragma mark Public

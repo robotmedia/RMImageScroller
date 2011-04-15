@@ -30,6 +30,7 @@
 	UISlider *slider;
 
 	// State
+    int centeredIndex;
 	NSMutableSet* recycledViews;
 	BOOL scrollChangeRequestedBySlider;
 	BOOL scrollerFrameNeedsLayout;
@@ -64,6 +65,7 @@
 -(UIImage*)		imageScroller:(RMImageScroller*)imageScroller imageAt:(int)index;
 - (int)			numberOfImagesInImageScroller:(RMImageScroller*)imageScroller;
 @optional
+-(void)         imageScroller:(RMImageScroller*)imageScroller centeredImageChanged:(int)index;
 -(void)			imageScroller:(RMImageScroller*)imageScroller selected:(int)index;
 -(void)			imageScroller:(RMImageScroller*)imageScroller spreadSelectedFrom:(int)startIndex to:(int)endIndex;
 -(NSString*)	imageScroller:(RMImageScroller*)imageScroller titleForIndex:(int)index;

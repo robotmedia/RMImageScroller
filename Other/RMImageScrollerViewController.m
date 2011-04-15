@@ -42,7 +42,7 @@
 	scroller.imageHeight = 150; // Default value: as tall as possible within the frame
 	scroller.hideTitles = NO; // Default value: NO
 	scroller.hideSlider = NO; // Default value: NO
-	scroller.spreadMode = NO; // Default value: NO
+	scroller.spreadMode = YES; // Default value: NO
 	[self.view addSubview:scroller];
 }
 
@@ -66,6 +66,11 @@
 }
 
 # pragma mark RMImageScrollerDelegate
+
+-(void) imageScroller:(RMImageScroller*)imageScroller centeredImageChanged:(int)index {
+    NSLog(@"Centered index: %d", index);
+}
+
 
 -(UIImage*) imageScroller:(RMImageScroller*)imageScroller imageAt:(int)index {
 	return [UIImage imageNamed:[NSString stringWithFormat:@"yon_kuma_%d.jpg", index]];
