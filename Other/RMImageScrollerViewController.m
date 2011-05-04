@@ -42,7 +42,8 @@
 	scroller.imageHeight = 150; // Default value: as tall as possible within the frame
 	scroller.hideTitles = NO; // Default value: NO
 	scroller.hideSlider = NO; // Default value: NO
-	scroller.spreadMode = YES; // Default value: NO
+	scroller.spreadMode = NO; // Default value: NO
+	scroller.spreadFirstPageAlone = NO; // Default value: NO
 	[self.view addSubview:scroller];
 }
 
@@ -53,11 +54,10 @@
     return YES;
 }
 
-- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
-	NSLog(@"hola");
-	scroller.spreadMode = UIInterfaceOrientationIsLandscape(self.interfaceOrientation);
+- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
+	[super willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
+	scroller.spreadMode = UIInterfaceOrientationIsLandscape(toInterfaceOrientation);
 }
-
 
 - (void)dealloc {
 	[scroller release];
@@ -65,7 +65,7 @@
     [super dealloc];
 }
 
-# pragma mark RMImageScrollerDelegate
+#pragma mark - RMImageScrollerDelegate
 
 -(void) imageScroller:(RMImageScroller*)imageScroller centeredImageChanged:(int)index {
     NSLog(@"Centered index: %d", index);
@@ -88,14 +88,16 @@
 	}
 }
 
--(void) imageScroller:(RMImageScroller*)imageScroller selected:(int)index {
+-(void) imageScroller:(RMImageScroller*)imageScroller selected:(int)index {NSLog(@"Selected!");
 	selectedImage.image = [self imageScroller:imageScroller imageAt:index];
+	[scroller setSelectedIndex:index animated:YES];
 }
 
 -(void)	imageScroller:(RMImageScroller*)imageScroller spreadSelectedFrom:(int)startIndex to:(int)endIndex {
 	UIImage* left = [self imageScroller:imageScroller imageAt:startIndex];
 	UIImage* right = (startIndex == endIndex) ? nil : [self imageScroller:imageScroller imageAt:endIndex];
 	selectedImage.image = [RMUIUtils imageByJoining:left with:right];
+	[scroller setSelectedIndex:endIndex animated:YES];
 }
 
 @end
