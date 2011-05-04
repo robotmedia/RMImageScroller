@@ -37,13 +37,15 @@
 	scroller.autoresizingMask = UIViewAutoresizingFlexibleWidth;
 	scroller.delegate = self;
 	scroller.padding = 10; // Default value: 0
-	scroller.separatorWidth = 10; // Default value: 0
-	scroller.imageWidth = 100; // Default value: 100
+    scroller.imageTitleBackgroundColor = [UIColor lightGrayColor]; // Default value: [UIColor lightGrayColor]
+    scroller.imageWidth = 100; // Default value: 100
 	scroller.imageHeight = 150; // Default value: as tall as possible within the frame
 	scroller.hideTitles = NO; // Default value: NO
 	scroller.hideSlider = NO; // Default value: NO
-	scroller.spreadMode = NO; // Default value: NO
+    scroller.selectedImageTitleBackgroundColor = [UIColor redColor]; // Default value: [UIColor darkGrayColor]
+	scroller.separatorWidth = 10; // Default value: 0
 	scroller.spreadFirstPageAlone = NO; // Default value: NO
+	scroller.spreadMode = NO; // Default value: NO
 	[self.view addSubview:scroller];
 }
 
