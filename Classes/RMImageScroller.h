@@ -28,13 +28,17 @@
 	// UI
 	UIScrollView* scroller;
 	UISlider *slider;
-
+    UIColor *imageTitleBackgroundColor;
+    UIColor *selectedImageTitleBackgroundColor;
+	
 	// State
     int centeredIndex;
 	NSMutableSet* recycledViews;
 	BOOL scrollChangeRequestedBySlider;
 	BOOL scrollerFrameNeedsLayout;
+	BOOL scrollerOffsetNeedsLayout;
 	NSMutableSet* visibleViews;
+	int selectedIndex;
 	
 	// Configuration
 	id<RMImageScrollerDelegate> delegate;
@@ -45,8 +49,12 @@
 	int imageWidth;
 	int imageHeight;
 	int separatorWidth;
+	
+	BOOL spreadFirstPageAlone;
 }
 
+@property (nonatomic, retain) UIColor *imageTitleBackgroundColor;
+@property (nonatomic, retain) UIColor *selectedImageTitleBackgroundColor;
 @property (nonatomic, assign) id<RMImageScrollerDelegate> delegate;
 @property (nonatomic, assign) BOOL spreadMode;
 @property (nonatomic, assign) BOOL hideSlider;
@@ -55,8 +63,13 @@
 @property (nonatomic, assign) int imageHeight;
 @property (nonatomic, assign) int padding;
 @property (nonatomic, assign) int separatorWidth;
+@property (nonatomic, getter=isSpreadFirstPageAlone) BOOL spreadFirstPageAlone;
 
+- (void) reloadImages;
 - (void) setSelectedIndex:(int)index;
+- (void) setSelectedIndex:(int)index animated:(BOOL)animated;
+
+- (void) setSpreadMode:(BOOL)spreadMode forceLayout:(BOOL)forceLayout;
 
 @end
 

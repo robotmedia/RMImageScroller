@@ -47,7 +47,8 @@
 @implementation RMScrollerTile 
 
 -(id)initWithFrame:(CGRect)aFrame{
-	if (self = [super initWithFrame:aFrame]) {		
+	if (self = [super initWithFrame:aFrame]) {
+        
 		imageView = [[UIImageView alloc] initWithFrame:aFrame];
 		imageView.backgroundColor = [UIColor clearColor];
 		imageView.contentMode = UIViewContentModeScaleToFill;
@@ -79,9 +80,9 @@
 	int titleWidth = MIN(MAX(titleSize.width + kImageScrollerTitlePadding * 2, kImageScrollerTitleMinWidth), imageView.frame.size.width);
 	int titleX = imageView.frame.origin.x + (imageView.frame.size.width - titleWidth) / 2;
 	title.frame = CGRectMake(titleX, 
-							   imageView.frame.origin.y + imageView.frame.size.height - kImageScrollerTitleHeight - kImageScrollerTitleMargin, 
-							   titleWidth, 
-							   kImageScrollerTitleHeight);
+							 imageView.frame.origin.y + imageView.frame.size.height - kImageScrollerTitleHeight - kImageScrollerTitleMargin, 
+							 titleWidth, 
+							 kImageScrollerTitleHeight);
 	
 	button.frame = imageView.frame;
 }
@@ -103,6 +104,7 @@
 @interface RMImageScroller(Private)
 
 - (int) calculateCenteredIndex;
+- (int) centeredIndex;
 - (void) centeredImageChanged;
 - (void) configure:(RMScrollerTile*)view forIndex:(int)index;
 - (RMScrollerTile*) dequeueRecycledView;
@@ -110,22 +112,29 @@
 - (int) imageCount;
 - (UIImage*) imageForIndex:(int)index;
 - (int) indexForX:(int)originX;
+- (void) updateSelectedTile;
 - (BOOL) isVisible:(int)index;
 - (void) onScrollerImageButtonTouchUpInside:(id)sender;
 - (void) scrollToIndex:(int)index;
+- (void) scrollToIndex:(int)index animated:(BOOL)animated;
 - (void) tile;
 - (int) tileCount;
 - (int) tileWidth;
 - (NSString*) titleForIndex:(int)index;
 - (NSString*) titleForImageIndex:(int)index;
+- (void) updateSliderAfterScroll;
+- (int) selectedIndex;
+- (int) centeredIndex;
 
 @end
 
 @implementation RMImageScroller
 
-
 -(id)initWithFrame:(CGRect)aFrame{
 	if (self = [super initWithFrame:aFrame]) {
+        imageTitleBackgroundColor = [UIColor lightGrayColor];
+        selectedImageTitleBackgroundColor = [UIColor darkGrayColor];
+        
 		recycledViews = [[NSMutableSet set] retain];
 		visibleViews = [[NSMutableSet set] retain];
 		
@@ -136,9 +145,10 @@
 		slider.minimumValue = 1;
 		[slider addTarget:self action:@selector(onSliderValueChanged:) forControlEvents:UIControlEventValueChanged];
 		[self addSubview:slider];
-
+		
 		scroller = [[UIScrollView alloc] init];
 		scrollerFrameNeedsLayout = YES;
+		scrollerOffsetNeedsLayout = YES;
 		scroller.backgroundColor = [UIColor clearColor];
 		scroller.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 		scroller.delegate = self;
@@ -165,9 +175,15 @@
 	contentWidth += self.padding * 2;
 	scroller.contentSize = CGSizeMake(contentWidth, scroller.frame.size.height);
 	[self tile];
+	if (scrollerOffsetNeedsLayout) {
+		[self setSelectedIndex:selectedIndex];
+		scrollerOffsetNeedsLayout = NO;
+	}
 }
 
 - (void)dealloc {
+    [imageTitleBackgroundColor release];
+    [selectedImageTitleBackgroundColor release];
 	[recycledViews release];
 	[scroller release];
 	[slider release];
@@ -180,6 +196,7 @@
 - (void) scrollViewDidScroll:(UIScrollView *)scrollView {
 	[self tile];
 	if (!scrollChangeRequestedBySlider) {
+		[self updateSliderAfterScroll];
         slider.value = [self calculateCenteredIndex] + 1;
 	}
 }
@@ -194,27 +211,40 @@
 - (void) setHideSlider:(BOOL)value {
 	hideSlider = value;
 	scrollerFrameNeedsLayout = YES;
+	scrollerOffsetNeedsLayout = YES;
 	[self setNeedsLayout];
 }
 
 - (void) setPadding:(int)value {
 	padding = value;
 	scrollerFrameNeedsLayout = YES;
+	scrollerOffsetNeedsLayout = YES;
 	[self setNeedsLayout];
 }
 
 - (void) setSpreadMode:(BOOL)value {
-	spreadMode	= value;
-	for (RMScrollerTile* v in visibleViews) {
-		[v removeFromSuperview];
+	[self setSpreadMode:value forceLayout:YES];
+}
+
+- (void) setSpreadMode:(BOOL)value forceLayout:(BOOL)forceLayout {
+	spreadMode = value;
+	if (forceLayout) {
+		scrollerOffsetNeedsLayout = YES;
+		[self reloadImages];
 	}
-	[visibleViews removeAllObjects];
-	[recycledViews removeAllObjects];
-	slider.maximumValue = [self tileCount];
-	[self setNeedsLayout];
 }
 
 # pragma mark Private
+
+- (void) updateSelectedTile {
+    for (RMScrollerTile *view in visibleViews) {
+        if (view.index == [self selectedIndex]) {
+            view.title.backgroundColor = selectedImageTitleBackgroundColor;
+        } else {
+            view.title.backgroundColor = imageTitleBackgroundColor;
+        }
+    }
+}
 
 - (int) calculateCenteredIndex {
     int centerX = scroller.contentOffset.x + (scroller.frame.size.width / 2);
@@ -223,8 +253,7 @@
 
 - (void) centeredImageChanged {
     if ([delegate respondsToSelector:@selector(imageScroller:centeredImageChanged:)]) {
-        int delegateIndex = spreadMode ? centeredIndex * 2 : centeredIndex;
-        [delegate imageScroller:self centeredImageChanged:delegateIndex];
+        [delegate imageScroller:self centeredImageChanged:[self centeredIndex]];
     }
 }
 
@@ -243,6 +272,11 @@
 		v.title.hidden = NO;
 		v.title.text = [self titleForIndex:index];
 	}
+    if (index == [self selectedIndex]) {
+        v.title.backgroundColor = selectedImageTitleBackgroundColor;
+    } else {
+        v.title.backgroundColor = imageTitleBackgroundColor;
+    }
 	[v setNeedsLayout];
 }
 
@@ -268,13 +302,37 @@
 
 - (UIImage*) imageForIndex:(int)index {
 	if (spreadMode) {
-		UIImage* left = [delegate imageScroller:self imageAt:index * 2];
-		int rightIndex = (index * 2) + 1;
-		UIImage* right;
+		int leftIndex, rightIndex;
+		if ([self isSpreadFirstPageAlone]) {
+			leftIndex = (index * 2) - 1;
+			rightIndex = index * 2;
+		} else {
+			leftIndex = index * 2;
+			rightIndex = (index * 2) + 1;
+		}
+		UIImage* left = nil;
+		if (leftIndex >= 0) {
+			left = [delegate imageScroller:self imageAt:leftIndex];
+		}
+		
+		UIImage* right = nil;
 		if (rightIndex < [self imageCount]) {
 			right = [delegate imageScroller:self imageAt:rightIndex];
-		} else {
-			right = [RMUIUtils imageWithColor:[UIColor whiteColor] andSize:left.size];
+		}
+		
+		if (!left) {
+			if (right) {
+				left = [RMUIUtils imageWithColor:[UIColor whiteColor] andSize:right.size];
+			} else {
+				left = [RMUIUtils imageWithColor:[UIColor whiteColor] andSize:CGSizeMake(self.imageWidth, self.imageHeight)];
+			}
+		}
+		if (!right) {
+			if (left) {
+				right = [RMUIUtils imageWithColor:[UIColor whiteColor] andSize:left.size];
+			} else {
+				right = [RMUIUtils imageWithColor:[UIColor whiteColor] andSize:CGSizeMake(self.imageWidth, self.imageHeight)];
+			}
 		}
 		return [RMUIUtils imageByJoining:left with:right];
 	} else {
@@ -287,7 +345,7 @@
 	int tileWidth = [self tileWidth];
 	int firstTileWidth = self.padding + tileWidth;
 	int otherTileWidth = tileWidth + separatorWidth;
-
+	
 	int index;
 	if (originX < firstTileWidth) {
 		index = 0;
@@ -313,7 +371,11 @@
 - (void) onScrollerImageButtonTouchUpInside:(id)sender {
 	int index = ((UIButton*)sender).tag;
 	if (spreadMode) {
-		index = index * 2;
+		if ([self isSpreadFirstPageAlone]) {
+			index = MAX(0, index * 2 - 1);
+		} else {
+			index = index * 2;
+		}
 		if ([delegate respondsToSelector:@selector(imageScroller:spreadSelectedFrom:to:)]) {
 			int lastIndex = index + 1;
 			if (lastIndex >= [self imageCount]) {
@@ -324,7 +386,8 @@
 	} else if ([delegate respondsToSelector:@selector(imageScroller:selected:)]) {
 		[delegate imageScroller:self selected:index];
 	}
-	
+	selectedIndex = index;
+	[self updateSelectedTile];
 }
 
 - (void) onSliderValueChanged:(id)sender {
@@ -335,17 +398,21 @@
 }
 
 - (void) scrollToIndex:(int)index {
+	[self scrollToIndex:index animated:NO];
+}
+
+- (void) scrollToIndex:(int)index animated:(BOOL)animated {
 	int tileWidth = [self tileWidth];
 	int x = self.padding + (tileWidth + separatorWidth) * index;
 	x -= scroller.frame.size.width / 2 - tileWidth / 2 - separatorWidth / 2;
-	scroller.contentOffset = CGPointMake(x, 0);
+	[scroller setContentOffset:CGPointMake(x, 0) animated:animated];
 }
 
 - (void) tile {
     CGRect visibleBounds = scroller.bounds;
 	int firstIndex = [self indexForX:CGRectGetMinX(visibleBounds)];
 	int lastIndex = [self indexForX:CGRectGetMaxX(visibleBounds)];
-    	
+	
     // Recycle no-longer-visible images 
     for (RMScrollerTile *v in visibleViews) {
         if (v.index < firstIndex || v.index > lastIndex) {
@@ -374,11 +441,21 @@
         centeredIndex = newCenteredIndex;
         [self centeredImageChanged];
     }
-
+	
 }
 
 - (int) tileCount {
 	int count = [self imageCount];
+	if (spreadMode) {
+		if ([self isSpreadFirstPageAlone]) {
+			return ceil(((double)count+1) / (double)2);
+		} else {
+			return ceil((double)count / (double)2);
+		}
+	} else {
+		return count;
+	}
+	
 	return spreadMode ? ceil((double)count / (double)2) : count;
 }
 - (int) tileWidth {
@@ -387,14 +464,37 @@
 
 - (NSString*) titleForIndex:(int)index {
 	if (spreadMode) {
-		NSString* left = [self titleForImageIndex:index * 2];
-		int rightIndex = (index * 2) + 1;
+		int leftIndex;
+		if ([self isSpreadFirstPageAlone]) {
+			leftIndex = (index * 2) - 1;
+		} else {
+			leftIndex = index * 2;
+		}
+		NSString* left = nil;
+		if (leftIndex >= 0) {
+			left = [self titleForImageIndex:leftIndex];
+		}
+		
+		int rightIndex;
+		if ([self isSpreadFirstPageAlone]) {
+			rightIndex = index * 2;
+		} else {
+			rightIndex = (index * 2) + 1;
+		}
+		
 		NSString* right = nil;
 		if (rightIndex < [self imageCount]) {
 			right = [self titleForImageIndex:rightIndex];
 		}
-		return right ? [NSString stringWithFormat:@"%@-%@", left, right] : left;
-
+		
+		if (left && right) {
+			return [NSString stringWithFormat:@"%@-%@", left, right];
+		} else if (right) {
+			return right;
+		} else {
+			return left;
+		}
+		
 	} else {
 		return [self titleForImageIndex:index];
 	}
@@ -411,13 +511,65 @@
 	return [NSString stringWithFormat:@"%d", index + 1];
 }
 
-#pragma mark Public
-
-- (void) setSelectedIndex:(int)index {
-	slider.value = index + 1;
-	[self scrollToIndex:index];
+- (void) updateSliderAfterScroll {
+	CGRect visibleBounds = scroller.bounds;
+	int firstIndex = [self indexForX:CGRectGetMinX(visibleBounds)];
+	int lastIndex = [self indexForX:CGRectGetMaxX(visibleBounds)];
+	slider.value = round((firstIndex + lastIndex + 2) / 2);
 }
 
+- (int) selectedIndex {
+	if (spreadMode) {
+		if ([self isSpreadFirstPageAlone]) {
+			return ceil(((double)selectedIndex / (double)2));
+		} else {
+			return ceil(((double)selectedIndex-1) / (double)2);
+		}
+	} else {
+		return selectedIndex;
+	}
+}
+
+- (int) centeredIndex {
+	if (spreadMode) {
+		if ([self isSpreadFirstPageAlone]) {
+			return ceil(((double)centeredIndex / (double)2));
+		} else {
+			return ceil(((double)centeredIndex-1) / (double)2);
+		}
+	} else {
+		return centeredIndex;
+	}
+}
+
+#pragma mark Public
+
+- (void) reloadImages {
+	for (RMScrollerTile* v in visibleViews) {
+		[v removeFromSuperview];
+	}
+	[visibleViews removeAllObjects];
+	[recycledViews removeAllObjects];
+	slider.maximumValue = [self tileCount];
+	//scrollerOffsetNeedsLayout = YES;
+	[self setNeedsLayout];
+}
+
+- (void) setSelectedIndex:(int)index {
+	[self setSelectedIndex:index animated:NO];
+}
+
+- (void) setSelectedIndex:(int)index animated:(BOOL)animated {
+	if (index < 0) {
+		index = 0;
+	}
+    selectedIndex = index;
+	slider.value = [self selectedIndex] + 1;
+    [self updateSelectedTile];
+	[self scrollToIndex:[self selectedIndex] animated:animated];
+}
+
+@synthesize imageTitleBackgroundColor, selectedImageTitleBackgroundColor;
 @dynamic delegate;
 @synthesize hideSlider;
 @synthesize hideTitles;
@@ -426,5 +578,6 @@
 @synthesize padding;
 @synthesize separatorWidth;
 @synthesize spreadMode;
+@synthesize spreadFirstPageAlone;
 
 @end

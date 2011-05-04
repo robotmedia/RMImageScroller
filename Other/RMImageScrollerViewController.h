@@ -24,6 +24,8 @@
 #import <UIKit/UIKit.h>
 #import "RMImageScroller.h"
 
+
+
 @interface RMImageScrollerViewController : UIViewController<RMImageScrollerDelegate> {
 	RMImageScroller* scroller;
 	UIImageView* selectedImage;
