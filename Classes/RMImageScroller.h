@@ -53,7 +53,7 @@
 	BOOL spreadFirstPageAlone;
 }
 
-@property (nonatomic, unsafe_unretained) id<RMImageScrollerDelegate> delegate;
+@property (nonatomic, unsafe_unretained) IBOutlet id<RMImageScrollerDelegate> delegate;
 @property (nonatomic, assign) BOOL hideSlider;
 @property (nonatomic, assign) BOOL hideTitles;
 @property (nonatomic) UIColor *imageTitleBackgroundColor;
