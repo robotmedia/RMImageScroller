@@ -61,11 +61,6 @@
 	scroller.spreadMode = UIInterfaceOrientationIsLandscape(toInterfaceOrientation);
 }
 
-- (void)dealloc {
-	[scroller release];
-	[selectedImage release];
-    [super dealloc];
-}
 
 #pragma mark - RMImageScrollerDelegate
 

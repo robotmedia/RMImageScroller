@@ -87,12 +87,6 @@
 	button.frame = imageView.frame;
 }
 
-- (void)dealloc {
-	[button release];
-	[imageView release];
-	[title release];
-    [super dealloc];
-}
 
 @synthesize button;
 @synthesize index;
@@ -135,8 +129,8 @@
         imageTitleBackgroundColor = [UIColor lightGrayColor];
         selectedImageTitleBackgroundColor = [UIColor darkGrayColor];
         
-		recycledViews = [[NSMutableSet set] retain];
-		visibleViews = [[NSMutableSet set] retain];
+		recycledViews = [NSMutableSet set];
+		visibleViews = [NSMutableSet set];
 		
 		self.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.5];
 		slider = [[UISlider alloc] init];
@@ -181,15 +175,6 @@
 	}
 }
 
-- (void)dealloc {
-    [imageTitleBackgroundColor release];
-    [selectedImageTitleBackgroundColor release];
-	[recycledViews release];
-	[scroller release];
-	[slider release];
-	[visibleViews release];
-    [super dealloc];
-}
 
 #pragma mark UIScrollViewDelegate
 
@@ -283,7 +268,6 @@
 - (RMScrollerTile*) dequeueRecycledView {
     RMScrollerTile *view = [recycledViews anyObject];
     if (view) {
-        [[view retain] autorelease];
         [recycledViews removeObject:view];
     }
     return view;
@@ -427,7 +411,7 @@
         if (![self isVisible:index]) {
             RMScrollerTile *v = [self dequeueRecycledView];
             if (v == nil) {
-                v = [[[RMScrollerTile alloc] initWithFrame:CGRectMake(0, 0, [self tileWidth], scroller.frame.size.height)] autorelease];
+                v = [[RMScrollerTile alloc] initWithFrame:CGRectMake(0, 0, [self tileWidth], scroller.frame.size.height)];
             }
             [self configure:v forIndex:index];
             [scroller addSubview:v];

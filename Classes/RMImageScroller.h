@@ -53,14 +53,14 @@
 	BOOL spreadFirstPageAlone;
 }
 
-@property (nonatomic, assign) id<RMImageScrollerDelegate> delegate;
+@property (nonatomic, unsafe_unretained) id<RMImageScrollerDelegate> delegate;
 @property (nonatomic, assign) BOOL hideSlider;
 @property (nonatomic, assign) BOOL hideTitles;
-@property (nonatomic, retain) UIColor *imageTitleBackgroundColor;
+@property (nonatomic) UIColor *imageTitleBackgroundColor;
 @property (nonatomic, assign) int imageWidth;
 @property (nonatomic, assign) int imageHeight;
 @property (nonatomic, assign) int padding;
-@property (nonatomic, retain) UIColor *selectedImageTitleBackgroundColor;
+@property (nonatomic) UIColor *selectedImageTitleBackgroundColor;
 @property (nonatomic, assign) int separatorWidth;
 @property (nonatomic, getter=isSpreadFirstPageAlone) BOOL spreadFirstPageAlone;
 @property (nonatomic, assign) BOOL spreadMode;
