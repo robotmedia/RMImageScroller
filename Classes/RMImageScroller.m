@@ -104,6 +104,7 @@
 - (RMScrollerTile*) dequeueRecycledView;
 - (CGRect) frameForIndex:(int)index;
 - (int) imageCount;
+- (void) initHelper;
 - (UIImage*) imageForIndex:(int)index;
 - (int) indexForX:(int)originX;
 - (void) updateSelectedTile;
@@ -124,30 +125,41 @@
 
 @implementation RMImageScroller
 
+- (void) initHelper {
+    imageTitleBackgroundColor = [UIColor lightGrayColor];
+    selectedImageTitleBackgroundColor = [UIColor darkGrayColor];
+    
+    recycledViews = [NSMutableSet set];
+    visibleViews = [NSMutableSet set];
+    
+    self.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.5];
+    slider = [[UISlider alloc] init];
+    slider.backgroundColor = [UIColor clearColor];
+    slider.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+    slider.minimumValue = 1;
+    [slider addTarget:self action:@selector(onSliderValueChanged:) forControlEvents:UIControlEventValueChanged];
+    [self addSubview:slider];
+    
+    scroller = [[UIScrollView alloc] init];
+    scrollerFrameNeedsLayout = YES;
+    scrollerOffsetNeedsLayout = YES;
+    scroller.backgroundColor = [UIColor clearColor];
+    scroller.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    scroller.delegate = self;
+    [self addSubview:scroller];
+    imageWidth = 100; // Default value to avoid EXC_ARITHMETIC
+}
+
+- (id)initWithCoder:(NSCoder *)aDecoder {
+	if (self = [super initWithCoder:aDecoder]) {
+        [self initHelper];
+    }
+    return self;
+}
+
 -(id)initWithFrame:(CGRect)aFrame{
 	if (self = [super initWithFrame:aFrame]) {
-        imageTitleBackgroundColor = [UIColor lightGrayColor];
-        selectedImageTitleBackgroundColor = [UIColor darkGrayColor];
-        
-		recycledViews = [NSMutableSet set];
-		visibleViews = [NSMutableSet set];
-		
-		self.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.5];
-		slider = [[UISlider alloc] init];
-		slider.backgroundColor = [UIColor clearColor];
-		slider.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-		slider.minimumValue = 1;
-		[slider addTarget:self action:@selector(onSliderValueChanged:) forControlEvents:UIControlEventValueChanged];
-		[self addSubview:slider];
-		
-		scroller = [[UIScrollView alloc] init];
-		scrollerFrameNeedsLayout = YES;
-		scrollerOffsetNeedsLayout = YES;
-		scroller.backgroundColor = [UIColor clearColor];
-		scroller.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-		scroller.delegate = self;
-		[self addSubview:scroller];
-		imageWidth = 100; // Default value to avoid EXC_ARITHMETIC
+        [self initHelper];
     }
     return self;
 }
