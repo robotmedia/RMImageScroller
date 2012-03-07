@@ -29,8 +29,8 @@
     RMImageScrollerViewController *viewController;
 }
 
-@property (nonatomic, retain) IBOutlet UIWindow *window;
-@property (nonatomic, retain) IBOutlet RMImageScrollerViewController *viewController;
+@property (nonatomic) IBOutlet UIWindow *window;
+@property (nonatomic) IBOutlet RMImageScrollerViewController *viewController;
 
 @end
 
