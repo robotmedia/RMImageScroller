@@ -81,4 +81,7 @@
 -(void)			imageScroller:(RMImageScroller*)imageScroller selected:(int)index;
 -(void)			imageScroller:(RMImageScroller*)imageScroller spreadSelectedFrom:(int)startIndex to:(int)endIndex;
 -(NSString*)	imageScroller:(RMImageScroller*)imageScroller titleForIndex:(int)index;
+
+// For (spreadMode == NO) only. Takes precedence over imageScroller:titleForIndex:.
+-(UIView*)      imageScroller:(RMImageScroller*)imageScroller titleViewForIndex:(int)index;
 @end
