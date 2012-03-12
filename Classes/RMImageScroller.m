@@ -35,12 +35,16 @@
 	UIImageView* imageView;
 	int index;
 	UILabel* title;
+    UIView* titleView;
 }
 
 @property (nonatomic, readonly) UIButton* button;
 @property (nonatomic, assign) int index;
 @property (nonatomic, readonly) UIImageView* imageView;
 @property (nonatomic, readonly) UILabel* title;
+@property (nonatomic, strong) UIView* titleView;
+
+- (void) recycle;
 
 @end
 
@@ -76,15 +80,32 @@
 }
 
 - (void) layoutSubviews {	
-	CGSize titleSize = [title.text sizeWithFont:title.font];
-	int titleWidth = MIN(MAX(titleSize.width + kImageScrollerTitlePadding * 2, kImageScrollerTitleMinWidth), imageView.frame.size.width);
-	int titleX = imageView.frame.origin.x + (imageView.frame.size.width - titleWidth) / 2;
-	title.frame = CGRectMake(titleX, 
+    if (!self.titleView) {
+        CGSize titleSize = [title.text sizeWithFont:title.font];
+        int titleWidth = MIN(MAX(titleSize.width + kImageScrollerTitlePadding * 2, kImageScrollerTitleMinWidth), imageView.frame.size.width);
+        int titleX = imageView.frame.origin.x + (imageView.frame.size.width - titleWidth) / 2;
+        title.frame = CGRectMake(titleX, 
 							 imageView.frame.origin.y + imageView.frame.size.height - kImageScrollerTitleHeight - kImageScrollerTitleMargin, 
 							 titleWidth, 
 							 kImageScrollerTitleHeight);
+    }
 	
 	button.frame = imageView.frame;
+}
+
+- (void) recycle {
+    [self.titleView removeFromSuperview];
+    self.titleView = nil;
+    self.title.hidden = NO;
+}
+
+- (void) setTitleView:(UIView *)value {
+    [self.titleView removeFromSuperview];
+    titleView = value;
+    if (self.titleView) {
+        [self addSubview:titleView];
+        self.title.hidden = YES;
+    }
 }
 
 
@@ -92,6 +113,7 @@
 @synthesize index;
 @synthesize imageView;
 @synthesize title;
+@synthesize titleView;
 
 @end
 
@@ -117,6 +139,7 @@
 - (int) tileWidth;
 - (NSString*) titleForIndex:(int)index;
 - (NSString*) titleForImageIndex:(int)index;
+- (UIView*) titleViewForImageIndex:(int)index;
 - (void) updateSliderAfterScroll;
 - (int) selectedIndex;
 - (int) centeredIndex;
@@ -268,6 +291,9 @@
 	} else {
 		v.title.hidden = NO;
 		v.title.text = [self titleForIndex:index];
+        if (!spreadMode) {
+            v.titleView = [self titleViewForImageIndex:index];
+        }
 	}
     if (index == [self selectedIndex]) {
         v.title.backgroundColor = selectedImageTitleBackgroundColor;
@@ -281,6 +307,7 @@
     RMScrollerTile *view = [recycledViews anyObject];
     if (view) {
         [recycledViews removeObject:view];
+        [view recycle];
     }
     return view;
 }
@@ -505,6 +532,13 @@
 		}
 	}
 	return [NSString stringWithFormat:@"%d", index + 1];
+}
+
+- (UIView*) titleViewForImageIndex:(int)index {
+    if ([delegate respondsToSelector:@selector(imageScroller:titleViewForIndex:)]) {
+		return [delegate imageScroller:self titleViewForIndex:index];
+	}
+    return nil;
 }
 
 - (void) updateSliderAfterScroll {
