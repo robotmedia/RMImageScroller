@@ -81,7 +81,7 @@
 	if (index == 0) {
 		return @"First";
 	} else {
-		return nil;
+		return [NSString stringWithFormat:@"#%d", index];
 	}
 }
 
@@ -95,6 +95,17 @@
 	UIImage* right = (startIndex == endIndex) ? nil : [self imageScroller:imageScroller imageAt:endIndex];
 	selectedImage.image = [RMUIUtils imageByJoining:left with:right];
 	[scroller setSelectedIndex:endIndex animated:YES];
+}
+
+- (UIView*) imageScroller:(RMImageScroller *)imageScroller titleViewForIndex:(int)index {
+    CGRect titleFrame = CGRectMake(0, scroller.imageHeight + scroller.padding, scroller.imageWidth, 30);
+    UILabel* titleView = [[UILabel alloc] initWithFrame:titleFrame];
+    titleView.textAlignment = UITextAlignmentCenter;
+    titleView.backgroundColor = [UIColor clearColor];
+    titleView.text = [self imageScroller:imageScroller titleForIndex:index];
+    titleView.font = [UIFont fontWithName:@"Futura" size:18];
+    titleView.textColor = [UIColor whiteColor];
+    return titleView;
 }
 
 @end
