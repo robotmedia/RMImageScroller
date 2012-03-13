@@ -60,6 +60,7 @@
 @property (nonatomic, assign) int imageWidth;
 @property (nonatomic, assign) int imageHeight;
 @property (nonatomic, assign) int padding;
+@property (nonatomic, readonly) UIScrollView* scrollView;
 @property (nonatomic) UIColor *selectedImageTitleBackgroundColor;
 @property (nonatomic, assign) int separatorWidth;
 @property (nonatomic, getter=isSpreadFirstPageAlone) BOOL spreadFirstPageAlone;

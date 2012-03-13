@@ -282,7 +282,7 @@
     v.frame = [self frameForIndex:index];
 	int imageViewHeight = imageHeight ? MIN(imageHeight, v.frame.size.height) : v.frame.size.height;
 	int imageViewY = (v.frame.size.height - imageViewHeight) / 2;
-	v.imageView.frame = CGRectMake(0, imageViewY, v.imageView.frame.size.width, imageViewHeight);
+	v.imageView.frame = CGRectMake(0, imageViewY, v.frame.size.width, imageViewHeight);
 	v.imageView.image = [self imageForIndex:index];
 	v.button.tag = index;
 	[v.button addTarget:self action:@selector(onScrollerImageButtonTouchUpInside:) forControlEvents:UIControlEventTouchUpInside];
@@ -606,6 +606,7 @@
 @synthesize imageWidth;
 @synthesize	imageHeight;
 @synthesize padding;
+@synthesize scrollView = scroller;
 @synthesize separatorWidth;
 @synthesize spreadMode;
 @synthesize spreadFirstPageAlone;
