@@ -39,6 +39,7 @@
 	BOOL scrollerOffsetNeedsLayout;
 	NSMutableSet* visibleViews;
 	int selectedIndex;
+	int contentWidth;
 	
 	// Configuration
 	id<RMImageScrollerDelegate> delegate;

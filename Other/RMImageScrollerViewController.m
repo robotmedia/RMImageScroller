@@ -23,6 +23,8 @@
 #import "RMImageScrollerViewController.h"
 #import "RMUIUtils.h"
 
+int const kImagesCount = 10;
+
 @implementation RMImageScrollerViewController
 
 - (void)viewDidLoad {
@@ -74,7 +76,7 @@
 }
 
 - (int)	numberOfImagesInImageScroller:(RMImageScroller*)imageScroller {
-	return 10;
+	return kImagesCount;
 }
 
 -(NSString*) imageScroller:(RMImageScroller*)imageScroller titleForIndex:(int)index {
@@ -85,15 +87,20 @@
 	}
 }
 
--(void) imageScroller:(RMImageScroller*)imageScroller selected:(int)index {NSLog(@"Selected!");
+-(void) imageScroller:(RMImageScroller*)imageScroller selected:(int)index {
 	selectedImage.image = [self imageScroller:imageScroller imageAt:index];
 	[scroller setSelectedIndex:index animated:YES];
 }
 
 -(void)	imageScroller:(RMImageScroller*)imageScroller spreadSelectedFrom:(int)startIndex to:(int)endIndex {
 	UIImage* left = [self imageScroller:imageScroller imageAt:startIndex];
-	UIImage* right = (startIndex == endIndex) ? nil : [self imageScroller:imageScroller imageAt:endIndex];
-	selectedImage.image = [RMUIUtils imageByJoining:left with:right];
+	if (scroller.spreadFirstPageAlone && (startIndex == 0 || startIndex == kImagesCount - 1)) {
+		selectedImage.image = left;
+	}
+	else {
+		UIImage* right = (startIndex == endIndex) ? nil : [self imageScroller:imageScroller imageAt:endIndex];
+		selectedImage.image = [RMUIUtils imageByJoining:left with:right];
+	}
 	[scroller setSelectedIndex:endIndex animated:YES];
 }
 
