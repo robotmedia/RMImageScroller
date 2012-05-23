@@ -36,10 +36,12 @@
 	int index;
 	UILabel* title;
     UIView* titleView;
+    int titleHeight;
 }
 
 @property (nonatomic, readonly) UIButton* button;
 @property (nonatomic, assign) int index;
+@property (nonatomic, assign) int titleHeight;
 @property (nonatomic, readonly) UIImageView* imageView;
 @property (nonatomic, readonly) UILabel* title;
 @property (nonatomic, strong) UIView* titleView;
@@ -85,9 +87,9 @@
         int titleWidth = MIN(MAX(titleSize.width + kImageScrollerTitlePadding * 2, kImageScrollerTitleMinWidth), imageView.frame.size.width);
         int titleX = imageView.frame.origin.x + (imageView.frame.size.width - titleWidth) / 2;
         title.frame = CGRectMake(titleX, 
-							 imageView.frame.origin.y + imageView.frame.size.height - kImageScrollerTitleHeight - kImageScrollerTitleMargin, 
+							 imageView.frame.origin.y + imageView.frame.size.height - self.titleHeight - kImageScrollerTitleMargin, 
 							 titleWidth, 
-							 kImageScrollerTitleHeight);
+							 self.titleHeight);
     }
 	
 	button.frame = imageView.frame;
@@ -114,6 +116,7 @@
 @synthesize imageView;
 @synthesize title;
 @synthesize titleView;
+@synthesize titleHeight;
 
 @end
 
@@ -154,6 +157,8 @@
     
     recycledViews = [NSMutableSet set];
     visibleViews = [NSMutableSet set];
+    
+    titleHeight = kImageScrollerTitleHeight; // default value
     
     self.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.5];
     slider = [[UISlider alloc] init];
@@ -254,6 +259,13 @@
 	}
 }
 
+- (void) setTitleHeight:(int)value {
+	titleHeight = value;
+	scrollerFrameNeedsLayout = YES;
+	scrollerOffsetNeedsLayout = YES;
+	[self setNeedsLayout];
+}
+
 # pragma mark Private
 
 - (void) updateSelectedTile {
@@ -286,6 +298,7 @@
 	v.imageView.image = [self imageForIndex:index];
 	v.button.tag = index;
 	[v.button addTarget:self action:@selector(onScrollerImageButtonTouchUpInside:) forControlEvents:UIControlEventTouchUpInside];
+    v.titleHeight = self.titleHeight;
 	if (hideTitles) {
 		v.title.hidden = YES;
 	} else {
@@ -435,7 +448,7 @@
     CGRect visibleBounds = scroller.bounds;
 	int firstIndex = [self indexForX:CGRectGetMinX(visibleBounds)];
 	int lastIndex = [self indexForX:CGRectGetMaxX(visibleBounds)];
-	
+
     // Recycle no-longer-visible images 
     for (RMScrollerTile *v in visibleViews) {
         if (v.index < firstIndex || v.index > lastIndex) {
@@ -464,7 +477,6 @@
         centeredIndex = newCenteredIndex;
         [self centeredImageChanged];
     }
-	
 }
 
 - (int) tileCount {
@@ -581,7 +593,7 @@
 	[visibleViews removeAllObjects];
 	[recycledViews removeAllObjects];
 	slider.maximumValue = [self tileCount];
-	//scrollerOffsetNeedsLayout = YES;
+	// scrollerOffsetNeedsLayout = YES;
 	[self setNeedsLayout];
 }
 
@@ -606,6 +618,7 @@
 @synthesize imageWidth;
 @synthesize	imageHeight;
 @synthesize padding;
+@synthesize titleHeight;
 @synthesize scrollView = scroller;
 @synthesize separatorWidth;
 @synthesize spreadMode;
