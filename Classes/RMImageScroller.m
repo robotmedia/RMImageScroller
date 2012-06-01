@@ -35,8 +35,8 @@
 	UIImageView* imageView;
 	int index;
 	UILabel* title;
-    UIView* titleView;
     int titleHeight;
+    UIView* titleView;
 }
 
 @property (nonatomic, readonly) UIButton* button;
@@ -115,10 +115,11 @@
 @synthesize index;
 @synthesize imageView;
 @synthesize title;
-@synthesize titleView;
 @synthesize titleHeight;
+@synthesize titleView;
 
 @end
+
 
 @interface RMImageScroller(Private)
 
@@ -690,10 +691,10 @@
 @synthesize imageWidth;
 @synthesize	imageHeight;
 @synthesize padding;
-@synthesize titleHeight;
 @synthesize scrollView = scroller;
 @synthesize separatorWidth;
 @synthesize spreadMode;
 @synthesize spreadFirstPageAlone;
+@synthesize titleHeight;
 
 @end
