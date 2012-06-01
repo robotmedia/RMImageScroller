@@ -29,5 +29,6 @@
 
 + (UIImage*) imageByJoining:(UIImage*)leftImage with:(UIImage*)rightImage;
 + (UIImage *)imageWithColor:(UIColor *)color andSize:(CGSize)size;
++ (void) logFrame:(CGRect)frame;
 
 @end

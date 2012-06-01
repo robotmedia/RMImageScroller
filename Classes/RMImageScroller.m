@@ -35,11 +35,13 @@
 	UIImageView* imageView;
 	int index;
 	UILabel* title;
+    int titleHeight;
     UIView* titleView;
 }
 
 @property (nonatomic, readonly) UIButton* button;
 @property (nonatomic, assign) int index;
+@property (nonatomic, assign) int titleHeight;
 @property (nonatomic, readonly) UIImageView* imageView;
 @property (nonatomic, readonly) UILabel* title;
 @property (nonatomic, strong) UIView* titleView;
@@ -85,9 +87,9 @@
         int titleWidth = MIN(MAX(titleSize.width + kImageScrollerTitlePadding * 2, kImageScrollerTitleMinWidth), imageView.frame.size.width);
         int titleX = imageView.frame.origin.x + (imageView.frame.size.width - titleWidth) / 2;
         title.frame = CGRectMake(titleX, 
-							 imageView.frame.origin.y + imageView.frame.size.height - kImageScrollerTitleHeight - kImageScrollerTitleMargin, 
+							 imageView.frame.origin.y + imageView.frame.size.height - self.titleHeight - kImageScrollerTitleMargin, 
 							 titleWidth, 
-							 kImageScrollerTitleHeight);
+							 self.titleHeight);
     }
 	
 	button.frame = imageView.frame;
@@ -113,9 +115,11 @@
 @synthesize index;
 @synthesize imageView;
 @synthesize title;
+@synthesize titleHeight;
 @synthesize titleView;
 
 @end
+
 
 @interface RMImageScroller(Private)
 
@@ -123,6 +127,7 @@
 - (int) centeredIndex;
 - (void) centeredImageChanged;
 - (void) configure:(RMScrollerTile*)view forIndex:(int)index;
+- (int) contentWidth;
 - (RMScrollerTile*) dequeueRecycledView;
 - (CGRect) frameForIndex:(int)index;
 - (int) imageCount;
@@ -136,7 +141,8 @@
 - (void) scrollToIndex:(int)index animated:(BOOL)animated;
 - (void) tile;
 - (int) tileCount;
-- (int) tileWidth;
+- (int) tileOffsetForIndex:(int)index;
+- (int) tileWidthForIndex:(int)index;
 - (NSString*) titleForIndex:(int)index;
 - (NSString*) titleForImageIndex:(int)index;
 - (UIView*) titleViewForImageIndex:(int)index;
@@ -154,6 +160,8 @@
     
     recycledViews = [NSMutableSet set];
     visibleViews = [NSMutableSet set];
+    
+    titleHeight = kImageScrollerTitleHeight; // default value
     
     self.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.5];
     slider = [[UISlider alloc] init];
@@ -188,6 +196,7 @@
 }
 
 - (void) layoutSubviews {
+	
 	slider.hidden = hideSlider;
 	slider.frame = CGRectMake(self.padding, 
 							  self.frame.size.height - kImageScrollerSliderHeight - self.padding, 
@@ -198,11 +207,10 @@
 		scroller.frame = CGRectMake(0, self.padding, self.frame.size.width, scrollerHeight);
 		scrollerFrameNeedsLayout = NO; // Avoid setting the scroller frame on scroll changes
 	}
-	int count = [self tileCount];
-	int contentWidth = count * [self tileWidth];
-	contentWidth += count * separatorWidth;
-	contentWidth += self.padding * 2;
+	
+	contentWidth = [self contentWidth];
 	scroller.contentSize = CGSizeMake(contentWidth, scroller.frame.size.height);
+	
 	[self tile];
 	if (scrollerOffsetNeedsLayout) {
 		[self setSelectedIndex:selectedIndex];
@@ -215,9 +223,10 @@
 
 - (void) scrollViewDidScroll:(UIScrollView *)scrollView {
 	[self tile];
+	
 	if (!scrollChangeRequestedBySlider) {
 		[self updateSliderAfterScroll];
-        slider.value = [self calculateCenteredIndex] + 1;
+		slider.value = [self calculateCenteredIndex] + 1;
 	}
 }
 
@@ -254,6 +263,13 @@
 	}
 }
 
+- (void) setTitleHeight:(int)value {
+	titleHeight = value;
+	scrollerFrameNeedsLayout = YES;
+	scrollerOffsetNeedsLayout = YES;
+	[self setNeedsLayout];
+}
+
 # pragma mark Private
 
 - (void) updateSelectedTile {
@@ -286,6 +302,7 @@
 	v.imageView.image = [self imageForIndex:index];
 	v.button.tag = index;
 	[v.button addTarget:self action:@selector(onScrollerImageButtonTouchUpInside:) forControlEvents:UIControlEventTouchUpInside];
+    v.titleHeight = self.titleHeight;
 	if (hideTitles) {
 		v.title.hidden = YES;
 	} else {
@@ -303,6 +320,30 @@
 	[v setNeedsLayout];
 }
 
+- (int) contentWidth {
+	int tileCount = [self tileCount];
+	int width = 0;
+	
+	if (spreadMode) {
+		if (tileCount == 1) {
+			width = [self tileWidthForIndex:0];
+		}
+		else if (tileCount == 2){
+			width = [self tileWidthForIndex:0] + [self tileWidthForIndex:1];
+		}
+		else {
+			width = [self tileWidthForIndex:0] + (tileCount - 2) * [self tileWidthForIndex:1] + [self tileWidthForIndex:tileCount - 1];
+		}
+	}
+	else {
+		width = tileCount * [self tileWidthForIndex:0];
+	}
+	
+	width += (tileCount - 1) * separatorWidth;
+	width += self.padding * 2;
+	return width;
+}
+
 - (RMScrollerTile*) dequeueRecycledView {
     RMScrollerTile *view = [recycledViews anyObject];
     if (view) {
@@ -313,10 +354,11 @@
 }
 
 - (CGRect) frameForIndex:(int)index {
-	int tileWidth = [self tileWidth];
+	int tileWidth = [self tileWidthForIndex:index];
     CGRect tileFrame = CGRectMake(0, 0, tileWidth, scroller.frame.size.height - 2*self.padding);
-	tileFrame.origin.x = self.padding + (tileWidth + separatorWidth) * index;
-    return tileFrame;
+	
+	tileFrame.origin.x = [self tileOffsetForIndex:index];
+	return tileFrame;
 }
 
 - (int) imageCount {
@@ -345,14 +387,14 @@
 		
 		if (!left) {
 			if (right) {
-				left = [RMUIUtils imageWithColor:[UIColor whiteColor] andSize:right.size];
+				return right;
 			} else {
 				left = [RMUIUtils imageWithColor:[UIColor whiteColor] andSize:CGSizeMake(self.imageWidth, self.imageHeight)];
 			}
 		}
 		if (!right) {
 			if (left) {
-				right = [RMUIUtils imageWithColor:[UIColor whiteColor] andSize:left.size];
+				return left;
 			} else {
 				right = [RMUIUtils imageWithColor:[UIColor whiteColor] andSize:CGSizeMake(self.imageWidth, self.imageHeight)];
 			}
@@ -365,9 +407,8 @@
 
 - (int) indexForX:(int)originX {
 	int count = [self tileCount];
-	int tileWidth = [self tileWidth];
-	int firstTileWidth = self.padding + tileWidth;
-	int otherTileWidth = tileWidth + separatorWidth;
+	int firstTileWidth = self.padding + [self tileWidthForIndex:0];
+	int otherTileWidth = [self tileWidthForIndex:1] + separatorWidth;
 	
 	int index;
 	if (originX < firstTileWidth) {
@@ -409,8 +450,7 @@
 	} else if ([delegate respondsToSelector:@selector(imageScroller:selected:)]) {
 		[delegate imageScroller:self selected:index];
 	}
-	selectedIndex = index;
-	[self updateSelectedTile];
+	
 }
 
 - (void) onSliderValueChanged:(id)sender {
@@ -425,8 +465,8 @@
 }
 
 - (void) scrollToIndex:(int)index animated:(BOOL)animated {
-	int tileWidth = [self tileWidth];
-	int x = self.padding + (tileWidth + separatorWidth) * index;
+	int tileWidth = [self tileWidthForIndex:index];
+	int x = [self tileOffsetForIndex:index];
 	x -= scroller.frame.size.width / 2 - tileWidth / 2 - separatorWidth / 2;
 	[scroller setContentOffset:CGPointMake(x, 0) animated:animated];
 }
@@ -435,7 +475,7 @@
     CGRect visibleBounds = scroller.bounds;
 	int firstIndex = [self indexForX:CGRectGetMinX(visibleBounds)];
 	int lastIndex = [self indexForX:CGRectGetMaxX(visibleBounds)];
-	
+
     // Recycle no-longer-visible images 
     for (RMScrollerTile *v in visibleViews) {
         if (v.index < firstIndex || v.index > lastIndex) {
@@ -444,27 +484,26 @@
         }
     }
     [visibleViews minusSet:recycledViews];
-    
+	
     // Add missing images
     for (int index = firstIndex; index <= lastIndex; index++) {
         if (![self isVisible:index]) {
             RMScrollerTile *v = [self dequeueRecycledView];
             if (v == nil) {
-                v = [[RMScrollerTile alloc] initWithFrame:CGRectMake(0, 0, [self tileWidth], scroller.frame.size.height)];
+                v = [[RMScrollerTile alloc] initWithFrame:CGRectMake(0, 0, [self tileWidthForIndex:index], scroller.frame.size.height)];
             }
             [self configure:v forIndex:index];
             [scroller addSubview:v];
             [visibleViews addObject:v];
 		}
     }
-    
+	
     // Update centered index
     int newCenteredIndex = [self calculateCenteredIndex];
     if (centeredIndex != newCenteredIndex) {
         centeredIndex = newCenteredIndex;
         [self centeredImageChanged];
     }
-	
 }
 
 - (int) tileCount {
@@ -478,11 +517,58 @@
 	} else {
 		return count;
 	}
-	
-	return spreadMode ? ceil((double)count / (double)2) : count;
 }
-- (int) tileWidth {
-	return spreadMode ? imageWidth * 2 : imageWidth;
+
+- (int) tileOffsetForIndex:(int)index {
+	
+	if (spreadMode) {
+		int count = [self tileCount];
+		if (index == 0) {
+			return self.padding;
+		}
+		else if (index == count - 1) {
+			if (count == 2) { // only two images
+				return self.padding + [self tileWidthForIndex:0] + separatorWidth;
+			}
+			else {
+				return self.padding + [self tileWidthForIndex:0] + separatorWidth + ([self tileWidthForIndex:1] + separatorWidth) * (index - 1);
+			}
+		}
+		else {
+			int tileWidth = [self tileWidthForIndex:index];
+			return self.padding + [self tileWidthForIndex:0] + separatorWidth * index  + (tileWidth * (index - 1));
+		}
+	}
+	else {
+		int tileWidth = [self tileWidthForIndex:index];
+		return self.padding + (tileWidth + separatorWidth) * index;
+	}
+}
+
+- (int) tileWidthForIndex:(int)index {
+	if (spreadMode) {
+		int count;
+		if (index == 0) {
+			if ([self isSpreadFirstPageAlone]) {
+				return imageWidth;
+			} else {
+				return imageWidth * 2;
+			}
+		} else if (index == (count = [self tileCount]) - 1) {
+			BOOL even = [self imageCount] % 2 == 0;
+			BOOL alone = [self isSpreadFirstPageAlone];
+			if (even != alone) { // (even && !alone) || (!even && alone)
+				return imageWidth * 2;				
+			} else {
+				return imageWidth;
+			}
+		} else {
+			return imageWidth * 2;
+		}
+		
+	} else {
+		return imageWidth;
+	}
 }
 
 - (NSString*) titleForIndex:(int)index {
@@ -517,7 +603,6 @@
 		} else {
 			return left;
 		}
-		
 	} else {
 		return [self titleForImageIndex:index];
 	}
@@ -581,7 +666,7 @@
 	[visibleViews removeAllObjects];
 	[recycledViews removeAllObjects];
 	slider.maximumValue = [self tileCount];
-	//scrollerOffsetNeedsLayout = YES;
+	// scrollerOffsetNeedsLayout = YES;
 	[self setNeedsLayout];
 }
 
@@ -610,5 +695,6 @@
 @synthesize separatorWidth;
 @synthesize spreadMode;
 @synthesize spreadFirstPageAlone;
+@synthesize titleHeight;
 
 @end
