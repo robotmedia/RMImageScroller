@@ -41,7 +41,7 @@
 	int selectedIndex;
 	
 	// Configuration
-	id<RMImageScrollerDelegate> delegate;
+	__unsafe_unretained id<RMImageScrollerDelegate> delegate;
 	BOOL spreadMode;
 	BOOL hideSlider;
 	BOOL hideTitles;
@@ -53,7 +53,7 @@
 	BOOL spreadFirstPageAlone;
 }
 
-@property (nonatomic, unsafe_unretained) IBOutlet id<RMImageScrollerDelegate> delegate;
+@property (nonatomic, assign) IBOutlet id<RMImageScrollerDelegate> delegate;
 @property (nonatomic, assign) BOOL hideSlider;
 @property (nonatomic, assign) BOOL hideTitles;
 @property (retain, nonatomic) UIColor *imageTitleBackgroundColor;
