@@ -22,6 +22,7 @@
 
 #import "RMImageScrollerViewController.h"
 #import "RMUIUtils.h"
+#import <QuartzCore/QuartzCore.h>
 
 @implementation RMImageScrollerViewController
 
@@ -37,16 +38,23 @@
 	scroller.autoresizingMask = UIViewAutoresizingFlexibleWidth;
 	scroller.delegate = self;
 	scroller.padding = 10; // Default value: 0
-    scroller.imageTitleBackgroundColor = [UIColor lightGrayColor]; // Default value: [UIColor lightGrayColor]
     scroller.imageWidth = 100; // Default value: 100
 	scroller.imageHeight = 150; // Default value: as tall as possible within the frame
-	scroller.hideTitles = NO; // Default value: NO
 	scroller.hideSlider = NO; // Default value: NO
     scroller.selectedImageTitleBackgroundColor = [UIColor redColor]; // Default value: [UIColor darkGrayColor]
 	scroller.separatorWidth = 10; // Default value: 0
 	scroller.spreadFirstPageAlone = NO; // Default value: NO
 	scroller.spreadMode = NO; // Default value: NO
-	[self.view addSubview:scroller];
+
+    // scroller.tilePrototype.title.hidden = YES;
+    scroller.tilePrototype.title.frame = CGRectMake(0, scroller.imageHeight + scroller.padding, scroller.imageWidth, 30);
+    scroller.tilePrototype.title.backgroundColor = [UIColor blueColor];
+    scroller.tilePrototype.title.textColor = [UIColor whiteColor];    
+    scroller.tilePrototype.title.font = [UIFont fontWithName:@"Futura" size:18];    
+    scroller.tilePrototype.title.layer.cornerRadius = 8;
+    scroller.tilePrototype.mount.image = [RMUIUtils imageWithColor:[UIColor redColor] andSize:CGSizeMake(104, 154)];
+
+    [self.view addSubview:scroller];
 }
 
 
@@ -95,17 +103,6 @@
 	UIImage* right = (startIndex == endIndex) ? nil : [self imageScroller:imageScroller imageAt:endIndex];
 	selectedImage.image = [RMUIUtils imageByJoining:left with:right];
 	[scroller setSelectedIndex:endIndex animated:YES];
-}
-
-- (UIView*) imageScroller:(RMImageScroller *)imageScroller titleViewForIndex:(int)index {
-    CGRect titleFrame = CGRectMake(0, scroller.imageHeight + scroller.padding, scroller.imageWidth, 30);
-    UILabel* titleView = [[UILabel alloc] initWithFrame:titleFrame];
-    titleView.textAlignment = UITextAlignmentCenter;
-    titleView.backgroundColor = [UIColor clearColor];
-    titleView.text = [self imageScroller:imageScroller titleForIndex:index];
-    titleView.font = [UIFont fontWithName:@"Futura" size:18];
-    titleView.textColor = [UIColor whiteColor];
-    return titleView;
 }
 
 @end
