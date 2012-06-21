@@ -24,9 +24,20 @@
 
 @protocol RMImageScrollerDelegate;
 
+@interface RMScrollerTile : UIView
+
+@property (nonatomic, readonly) UIButton* button;
+@property (nonatomic, assign) int index;
+@property (nonatomic, readonly) UIImageView* imageView;
+@property (nonatomic, readonly) UIImageView *mount; // frame
+@property (nonatomic, readonly) UILabel* title;
+
+- (void) recycle;
+
+@end
+
 @interface RMImageScroller : UIView<UIScrollViewDelegate> {
 	// UI
-    UIColor *imageTitleBackgroundColor;
 	UIScrollView* scroller;
     UIColor *selectedImageTitleBackgroundColor;
 	UISlider *slider;
@@ -44,10 +55,7 @@
 	__unsafe_unretained id<RMImageScrollerDelegate> delegate;
 	BOOL spreadMode;
 	BOOL hideSlider;
-	BOOL hideTitles;
 	int padding;
-	int imageWidth;
-	int imageHeight;
 	int separatorWidth;
 	
 	BOOL spreadFirstPageAlone;
@@ -55,8 +63,6 @@
 
 @property (nonatomic, assign) IBOutlet id<RMImageScrollerDelegate> delegate;
 @property (nonatomic, assign) BOOL hideSlider;
-@property (nonatomic, assign) BOOL hideTitles;
-@property (retain, nonatomic) UIColor *imageTitleBackgroundColor;
 @property (nonatomic, assign) int imageWidth;
 @property (nonatomic, assign) int imageHeight;
 @property (nonatomic, assign) int padding;
@@ -65,6 +71,22 @@
 @property (nonatomic, assign) int separatorWidth;
 @property (nonatomic, getter=isSpreadFirstPageAlone) BOOL spreadFirstPageAlone;
 @property (nonatomic, assign) BOOL spreadMode;
+
+// Use tile prototype to customize the appearence of tiles
+@property (nonatomic, readonly) RMScrollerTile *tilePrototype;
+// Supported title prototype properties:
+// mount.image
+// imageView.layer.shadowColor
+// imageView.layer.shadowOffset
+// imageView.layer.shadowOpacity
+// imageView.layer.shadowRadius
+// title.frame
+// title.hidden
+// title.backgroundColor
+// title.textAlignment
+// title.layer.cornerRadius
+// title.font
+// title.textColor
 
 - (void) reloadImages;
 - (void) setSelectedIndex:(int)index;
@@ -82,7 +104,4 @@
 -(void)			imageScroller:(RMImageScroller*)imageScroller selected:(int)index;
 -(void)			imageScroller:(RMImageScroller*)imageScroller spreadSelectedFrom:(int)startIndex to:(int)endIndex;
 -(NSString*)	imageScroller:(RMImageScroller*)imageScroller titleForIndex:(int)index;
-
-// For (spreadMode == NO) only. Takes precedence over imageScroller:titleForIndex:.
--(UIView*)      imageScroller:(RMImageScroller*)imageScroller titleViewForIndex:(int)index;
 @end
