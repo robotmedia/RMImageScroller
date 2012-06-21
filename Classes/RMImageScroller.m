@@ -30,94 +30,67 @@
 #define kImageScrollerTitleHeight 20
 #define kImageScrollerTitleMinWidth 30
 
-@interface RMScrollerTile : UIView {
-	UIButton* button;
-	UIImageView* imageView;
-	int index;
-	UILabel* title;
-    UIView* titleView;
-}
-
-@property (nonatomic, readonly) UIButton* button;
-@property (nonatomic, assign) int index;
-@property (nonatomic, readonly) UIImageView* imageView;
-@property (nonatomic, readonly) UILabel* title;
-@property (nonatomic, strong) UIView* titleView;
-
-- (void) recycle;
-
-@end
-
 @implementation RMScrollerTile 
 
 -(id)initWithFrame:(CGRect)aFrame{
 	if (self = [super initWithFrame:aFrame]) {
         
-		imageView = [[UIImageView alloc] initWithFrame:aFrame];
-		imageView.backgroundColor = [UIColor clearColor];
-		imageView.contentMode = UIViewContentModeScaleToFill;
-		imageView.clipsToBounds = NO;
-		imageView.layer.shadowColor = [UIColor blackColor].CGColor;
-		imageView.layer.shadowOffset = CGSizeMake(2, 2);
-		imageView.layer.shadowOpacity = 0.5;
-		imageView.layer.shadowRadius = 1.0;
-		[self addSubview:imageView];
+		mount = [[UIImageView alloc] initWithFrame:aFrame];
+		[self addSubview:self.mount];
 		
+        imageView = [[UIImageView alloc] initWithFrame:aFrame];
+		self.imageView.backgroundColor = [UIColor clearColor];
+		self.imageView.contentMode = UIViewContentModeScaleToFill;
+		self.imageView.clipsToBounds = NO;
+		self.imageView.layer.shadowColor = [UIColor blackColor].CGColor;
+		self.imageView.layer.shadowOffset = CGSizeMake(2, 2);
+		self.imageView.layer.shadowOpacity = 0.5;
+		self.imageView.layer.shadowRadius = 1.0;
+		[self addSubview:self.imageView];
+        		
 		title = [[UILabel alloc] init];
-		title.backgroundColor = [UIColor lightGrayColor];
-		title.textAlignment = UITextAlignmentCenter;
-		title.layer.cornerRadius = 8;
-		title.font = [UIFont systemFontOfSize:14];
-		title.textColor = [UIColor whiteColor];
-		[self addSubview:title];
+		self.title.textAlignment = UITextAlignmentCenter;
+		[self addSubview:self.title];
 		
 		button = [[UIButton alloc] init];
-		button.backgroundColor = [UIColor clearColor];
-		button.autoresizingMask = imageView.autoresizingMask;
-		[self addSubview:button];
+		self.button.backgroundColor = [UIColor clearColor];
+		self.button.autoresizingMask = imageView.autoresizingMask;
+		[self addSubview:self.button];
     }
     return self;
 }
 
 - (void) layoutSubviews {	
-    if (!self.titleView) {
-        CGSize titleSize = [title.text sizeWithFont:title.font];
-        int titleWidth = MIN(MAX(titleSize.width + kImageScrollerTitlePadding * 2, kImageScrollerTitleMinWidth), imageView.frame.size.width);
-        int titleX = imageView.frame.origin.x + (imageView.frame.size.width - titleWidth) / 2;
-        title.frame = CGRectMake(titleX, 
+    CGSize titleSize = [title.text sizeWithFont:title.font];
+    int titleWidth = MIN(MAX(titleSize.width + kImageScrollerTitlePadding * 2, kImageScrollerTitleMinWidth), imageView.frame.size.width);
+    int titleX = imageView.frame.origin.x + (imageView.frame.size.width - titleWidth) / 2;
+    title.frame = CGRectMake(titleX, 
 							 imageView.frame.origin.y + imageView.frame.size.height - kImageScrollerTitleHeight - kImageScrollerTitleMargin, 
 							 titleWidth, 
 							 kImageScrollerTitleHeight);
+    
+    if (self.mount.image) {
+        self.mount.hidden = NO;
+        int mountX = self.imageView.frame.origin.x - (self.mount.image.size.width - self.imageView.frame.size.width) / 2;
+        int mountY = self.imageView.frame.origin.y - (self.mount.image.size.height - self.imageView.frame.size.height) / 2;
+        self.mount.frame = CGRectMake(mountX, mountY, self.mount.image.size.width, self.mount.image.size.height);
+    } else {
+        self.mount.hidden = YES;
     }
-	
 	button.frame = imageView.frame;
 }
 
-- (void) recycle {
-    [self.titleView removeFromSuperview];
-    self.titleView = nil;
-    self.title.hidden = NO;
-}
-
-- (void) setTitleView:(UIView *)value {
-    [self.titleView removeFromSuperview];
-    titleView = value;
-    if (self.titleView) {
-        [self addSubview:titleView];
-        self.title.hidden = YES;
-    }
-}
-
+- (void) recycle {}
 
 @synthesize button;
 @synthesize index;
 @synthesize imageView;
+@synthesize mount;
 @synthesize title;
-@synthesize titleView;
 
 @end
 
-@interface RMImageScroller(Private)
+@interface RMImageScroller()
 
 - (int) calculateCenteredIndex;
 - (int) centeredIndex;
@@ -139,7 +112,6 @@
 - (int) tileWidth;
 - (NSString*) titleForIndex:(int)index;
 - (NSString*) titleForImageIndex:(int)index;
-- (UIView*) titleViewForImageIndex:(int)index;
 - (void) updateSliderAfterScroll;
 - (int) selectedIndex;
 - (int) centeredIndex;
@@ -149,7 +121,6 @@
 @implementation RMImageScroller
 
 - (void) initHelper {
-    imageTitleBackgroundColor = [UIColor lightGrayColor];
     selectedImageTitleBackgroundColor = [UIColor darkGrayColor];
     
     recycledViews = [NSMutableSet set];
@@ -171,6 +142,8 @@
     scroller.delegate = self;
     [self addSubview:scroller];
     imageWidth = 100; // Default value to avoid EXC_ARITHMETIC
+    
+    tilePrototype = [[RMScrollerTile alloc] initWithFrame:CGRectZero];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
@@ -261,7 +234,7 @@
         if (view.index == [self selectedIndex]) {
             view.title.backgroundColor = selectedImageTitleBackgroundColor;
         } else {
-            view.title.backgroundColor = imageTitleBackgroundColor;
+            view.title.backgroundColor = self.tilePrototype.title.backgroundColor;
         }
     }
 }
@@ -286,19 +259,30 @@
 	v.imageView.image = [self imageForIndex:index];
 	v.button.tag = index;
 	[v.button addTarget:self action:@selector(onScrollerImageButtonTouchUpInside:) forControlEvents:UIControlEventTouchUpInside];
-	if (hideTitles) {
-		v.title.hidden = YES;
-	} else {
-		v.title.hidden = NO;
+
+    v.mount.image = self.tilePrototype.mount.image;
+        
+    v.imageView.layer.shadowColor = self.tilePrototype.imageView.layer.shadowColor;
+    v.imageView.layer.shadowOffset = self.tilePrototype.imageView.layer.shadowOffset;
+    v.imageView.layer.shadowOpacity = self.tilePrototype.imageView.layer.shadowOpacity;
+    v.imageView.layer.shadowRadius = self.tilePrototype.imageView.layer.shadowRadius;
+    
+    v.title.frame = self.tilePrototype.title.frame;
+    v.title.hidden = self.tilePrototype.title.hidden;
+    v.title.backgroundColor = self.tilePrototype.title.backgroundColor;    
+    v.title.textAlignment = self.tilePrototype.title.textAlignment;
+    v.title.layer.cornerRadius = self.tilePrototype.title.layer.cornerRadius;
+    v.title.font = self.tilePrototype.title.font;
+    v.title.textColor = self.tilePrototype.title.textColor;
+    
+    if (self.spreadMode) {
+        v.mount.image = nil;
+    }
+    if (!v.title.hidden) {
 		v.title.text = [self titleForIndex:index];
-        if (!spreadMode) {
-            v.titleView = [self titleViewForImageIndex:index];
-        }
 	}
     if (index == [self selectedIndex]) {
         v.title.backgroundColor = selectedImageTitleBackgroundColor;
-    } else {
-        v.title.backgroundColor = imageTitleBackgroundColor;
     }
 	[v setNeedsLayout];
 }
@@ -534,13 +518,6 @@
 	return [NSString stringWithFormat:@"%d", index + 1];
 }
 
-- (UIView*) titleViewForImageIndex:(int)index {
-    if ([delegate respondsToSelector:@selector(imageScroller:titleViewForIndex:)]) {
-		return [delegate imageScroller:self titleViewForIndex:index];
-	}
-    return nil;
-}
-
 - (void) updateSliderAfterScroll {
 	CGRect visibleBounds = scroller.bounds;
 	int firstIndex = [self indexForX:CGRectGetMinX(visibleBounds)];
@@ -599,10 +576,9 @@
 	[self scrollToIndex:[self selectedIndex] animated:animated];
 }
 
-@synthesize imageTitleBackgroundColor, selectedImageTitleBackgroundColor;
+@synthesize selectedImageTitleBackgroundColor;
 @dynamic delegate;
 @synthesize hideSlider;
-@synthesize hideTitles;
 @synthesize imageWidth;
 @synthesize	imageHeight;
 @synthesize padding;
@@ -610,5 +586,6 @@
 @synthesize separatorWidth;
 @synthesize spreadMode;
 @synthesize spreadFirstPageAlone;
+@synthesize tilePrototype;
 
 @end
