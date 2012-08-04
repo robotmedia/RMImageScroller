@@ -27,10 +27,8 @@
 #define kImageScrollerSliderHeight 23
 #define kImageScrollerTitlePadding 5
 #define kImageScrollerTitleMargin 5
-#define kImageScrollerTitleHeight 20
-#define kImageScrollerTitleMinWidth 30
 
-@implementation RMScrollerTile 
+@implementation RMScrollerTile
 
 -(id)initWithFrame:(CGRect)aFrame{
 	if (self = [super initWithFrame:aFrame]) {
@@ -47,12 +45,13 @@
 		self.imageView.layer.shadowOpacity = 0.5;
 		self.imageView.layer.shadowRadius = 1.0;
 		[self addSubview:self.imageView];
-        		
-		title = [[UILabel alloc] init];
+        
+		title = [[UILabel alloc] initWithFrame:aFrame];
 		self.title.textAlignment = UITextAlignmentCenter;
+        self.title.backgroundColor = [UIColor clearColor];
 		[self addSubview:self.title];
 		
-		button = [[UIButton alloc] init];
+		button = [[UIButton alloc] initWithFrame:aFrame];
 		self.button.backgroundColor = [UIColor clearColor];
 		self.button.autoresizingMask = imageView.autoresizingMask;
 		[self addSubview:self.button];
@@ -60,14 +59,26 @@
     return self;
 }
 
-- (void) layoutSubviews {	
+- (void) layoutSubviews {
+    if (CGRectIsEmpty(self.imageView.frame)) {
+        self.imageView.frame = CGRectMake(self.imageView.frame.origin.x, self.imageView.frame.origin.y, self.frame.size.width, self.frame.size.height);
+    }
+    int imageViewY;
+    int imageViewHeight;
+    if (self.useImageOriginY) {
+        imageViewY = self.imageView.frame.origin.y;
+        imageViewHeight = MIN(self.imageView.frame.size.height, self.frame.size.height - imageViewY);
+    } else {
+        imageViewHeight = MIN(self.imageView.frame.size.height, self.frame.size.height);
+        imageViewY = (self.frame.size.height - imageViewHeight) / 2;
+    }
+    self.imageView.frame = CGRectMake(self.imageView.frame.origin.x, imageViewY, self.imageView.frame.size.width, imageViewHeight);
+    
     CGSize titleSize = [title.text sizeWithFont:title.font];
-    int titleWidth = MIN(MAX(titleSize.width + kImageScrollerTitlePadding * 2, kImageScrollerTitleMinWidth), imageView.frame.size.width);
+    int titleWidth = MIN(titleSize.width + kImageScrollerTitlePadding * 2, imageView.frame.size.width);
     int titleX = imageView.frame.origin.x + (imageView.frame.size.width - titleWidth) / 2;
-    title.frame = CGRectMake(titleX, 
-							 imageView.frame.origin.y + imageView.frame.size.height - kImageScrollerTitleHeight - kImageScrollerTitleMargin, 
-							 titleWidth, 
-							 kImageScrollerTitleHeight);
+    int titleY = self.useTitleOriginY ? self.title.frame.origin.y : self.imageView.frame.origin.y + self.imageView.frame.size.height - titleSize.height - kImageScrollerTitleMargin;
+    title.frame = CGRectMake(titleX, titleY, titleWidth, titleSize.height);
     
     if (self.mount.image) {
         self.mount.hidden = NO;
@@ -87,6 +98,8 @@
 @synthesize imageView;
 @synthesize mount;
 @synthesize title;
+@synthesize useImageOriginY;
+@synthesize useTitleOriginY;
 
 @end
 
@@ -141,7 +154,6 @@
     scroller.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     scroller.delegate = self;
     [self addSubview:scroller];
-    imageWidth = 100; // Default value to avoid EXC_ARITHMETIC
     
     tilePrototype = [[RMScrollerTile alloc] initWithFrame:CGRectZero];
 }
@@ -162,8 +174,8 @@
 
 - (void) layoutSubviews {
 	slider.hidden = hideSlider;
-	slider.frame = CGRectMake(self.padding, 
-							  self.frame.size.height - kImageScrollerSliderHeight - self.padding, 
+	slider.frame = CGRectMake(self.padding,
+							  self.frame.size.height - kImageScrollerSliderHeight - self.padding,
 							  self.frame.size.width - self.padding * 2,
 							  kImageScrollerSliderHeight);
 	if (scrollerFrameNeedsLayout) {
@@ -196,6 +208,18 @@
 
 #pragma mark Properties
 
+- (int) imageHeight {
+    if (CGRectIsEmpty(self.tilePrototype.imageView.frame)) {
+        return 1; // Default value to avoid EXC_ARITHMETIC
+    } else {
+        return self.tilePrototype.imageView.frame.size.height;
+    }
+}
+
+- (int) imageWidth {
+    return self.tilePrototype.imageView.frame.size.width;
+}
+
 - (void) setDelegate:(id <RMImageScrollerDelegate>)aDelegate {
 	delegate = aDelegate;
 	slider.maximumValue = [self tileCount];
@@ -206,6 +230,18 @@
 	scrollerFrameNeedsLayout = YES;
 	scrollerOffsetNeedsLayout = YES;
 	[self setNeedsLayout];
+}
+
+- (void) setImageHeight:(int)imageHeight {
+    CGRect currentFrame = self.tilePrototype.imageView.frame;
+    CGRect newFrame = CGRectMake(currentFrame.origin.x, currentFrame.origin.y, currentFrame.size.width, imageHeight);
+    self.tilePrototype.imageView.frame = newFrame;
+}
+
+- (void) setImageWidth:(int)imageWidth {
+    CGRect currentFrame = self.tilePrototype.imageView.frame;
+    CGRect newFrame = CGRectMake(currentFrame.origin.x, currentFrame.origin.y, imageWidth, currentFrame.size.height);
+    self.tilePrototype.imageView.frame = newFrame;
 }
 
 - (void) setPadding:(int)value {
@@ -253,37 +289,38 @@
 - (void) configure:(RMScrollerTile*)v forIndex:(int)index {
     v.index = index;
     v.frame = [self frameForIndex:index];
-	int imageViewHeight = imageHeight ? MIN(imageHeight, v.frame.size.height) : v.frame.size.height;
-	int imageViewY = (v.frame.size.height - imageViewHeight) / 2;
-	v.imageView.frame = CGRectMake(0, imageViewY, v.frame.size.width, imageViewHeight);
-	v.imageView.image = [self imageForIndex:index];
-	v.button.tag = index;
-	[v.button addTarget:self action:@selector(onScrollerImageButtonTouchUpInside:) forControlEvents:UIControlEventTouchUpInside];
-
-    v.mount.image = self.tilePrototype.mount.image;
-        
+	
+    {
+        CGRect frame = self.tilePrototype.imageView.frame;
+        v.imageView.frame = CGRectMake(frame.origin.x, frame.origin.y, self.tileWidth, frame.size.height);
+    }
+    v.imageView.image = [self imageForIndex:index];
     v.imageView.layer.shadowColor = self.tilePrototype.imageView.layer.shadowColor;
     v.imageView.layer.shadowOffset = self.tilePrototype.imageView.layer.shadowOffset;
     v.imageView.layer.shadowOpacity = self.tilePrototype.imageView.layer.shadowOpacity;
     v.imageView.layer.shadowRadius = self.tilePrototype.imageView.layer.shadowRadius;
+    v.useImageOriginY = self.tilePrototype.useImageOriginY;
     
     v.title.frame = self.tilePrototype.title.frame;
     v.title.hidden = self.tilePrototype.title.hidden;
-    v.title.backgroundColor = self.tilePrototype.title.backgroundColor;    
+    v.title.backgroundColor = self.tilePrototype.title.backgroundColor;
     v.title.textAlignment = self.tilePrototype.title.textAlignment;
     v.title.layer.cornerRadius = self.tilePrototype.title.layer.cornerRadius;
     v.title.font = self.tilePrototype.title.font;
     v.title.textColor = self.tilePrototype.title.textColor;
-    
-    if (self.spreadMode) {
-        v.mount.image = nil;
-    }
+    v.useTitleOriginY = self.tilePrototype.useTitleOriginY;
     if (!v.title.hidden) {
 		v.title.text = [self titleForIndex:index];
 	}
     if (index == [self selectedIndex]) {
         v.title.backgroundColor = selectedImageTitleBackgroundColor;
     }
+    
+    v.button.tag = index;
+	[v.button addTarget:self action:@selector(onScrollerImageButtonTouchUpInside:) forControlEvents:UIControlEventTouchUpInside];
+    
+    v.mount.image = self.spreadMode ? nil : self.tilePrototype.mount.image;
+    
 	[v setNeedsLayout];
 }
 
@@ -376,7 +413,7 @@
 }
 
 - (void) onScrollerImageButtonTouchUpInside:(id)sender {
-	int index = ((UIButton*)sender).tag;
+	int index = (int)((UIButton*)sender).tag;
 	if (spreadMode) {
 		if ([self isSpreadFirstPageAlone]) {
 			index = MAX(0, index * 2 - 1);
@@ -420,7 +457,7 @@
 	int firstIndex = [self indexForX:CGRectGetMinX(visibleBounds)];
 	int lastIndex = [self indexForX:CGRectGetMaxX(visibleBounds)];
 	
-    // Recycle no-longer-visible images 
+    // Recycle no-longer-visible images
     for (RMScrollerTile *v in visibleViews) {
         if (v.index < firstIndex || v.index > lastIndex) {
             [recycledViews addObject:v];
@@ -466,7 +503,7 @@
 	return spreadMode ? ceil((double)count / (double)2) : count;
 }
 - (int) tileWidth {
-	return spreadMode ? imageWidth * 2 : imageWidth;
+	return spreadMode ? self.imageWidth * 2 : self.imageWidth;
 }
 
 - (NSString*) titleForIndex:(int)index {
@@ -579,8 +616,8 @@
 @synthesize selectedImageTitleBackgroundColor;
 @dynamic delegate;
 @synthesize hideSlider;
-@synthesize imageWidth;
-@synthesize	imageHeight;
+@dynamic imageWidth;
+@dynamic imageHeight;
 @synthesize padding;
 @synthesize scrollView = scroller;
 @synthesize separatorWidth;

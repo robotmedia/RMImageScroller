@@ -29,8 +29,10 @@
 @property (nonatomic, readonly) UIButton* button;
 @property (nonatomic, assign) int index;
 @property (nonatomic, readonly) UIImageView* imageView;
-@property (nonatomic, readonly) UIImageView *mount; // frame
+@property (nonatomic, readonly) UIImageView *mount; // Image frame
 @property (nonatomic, readonly) UILabel* title;
+@property (nonatomic, assign) BOOL useImageOriginY;
+@property (nonatomic, assign) BOOL useTitleOriginY;
 
 - (void) recycle;
 
@@ -76,11 +78,13 @@
 @property (nonatomic, readonly) RMScrollerTile *tilePrototype;
 // Supported title prototype properties:
 // mount.image
+// imageView.frame.origin.y
+// imageView.frame.size
 // imageView.layer.shadowColor
 // imageView.layer.shadowOffset
 // imageView.layer.shadowOpacity
 // imageView.layer.shadowRadius
-// title.frame
+// title.frame.origin.y
 // title.hidden
 // title.backgroundColor
 // title.textAlignment
