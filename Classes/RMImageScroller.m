@@ -93,6 +93,28 @@
 
 - (void) recycle {}
 
+- (void) copyStyleOf:(RMScrollerTile *)prototile {
+    self.useImageOriginY = prototile.useImageOriginY;
+    self.useTitleOriginY = prototile.useTitleOriginY;
+
+    self.imageView.frame = prototile.imageView.frame;
+    self.imageView.layer.shadowColor = prototile.imageView.layer.shadowColor;
+    self.imageView.layer.shadowOffset = prototile.imageView.layer.shadowOffset;
+    self.imageView.layer.shadowOpacity = prototile.imageView.layer.shadowOpacity;
+    self.imageView.layer.shadowRadius = prototile.imageView.layer.shadowRadius;
+    
+    self.title.frame = prototile.title.frame;
+    self.title.hidden = prototile.title.hidden;
+    self.title.backgroundColor = prototile.title.backgroundColor;
+    self.title.textAlignment = prototile.title.textAlignment;
+    self.title.layer.cornerRadius = prototile.title.layer.cornerRadius;
+    self.title.font = prototile.title.font;
+    self.title.textColor = prototile.title.textColor;
+    self.title.shadowColor = prototile.title.shadowColor;
+
+    self.mount.image = prototile.mount.image;
+}
+
 @synthesize button;
 @synthesize index;
 @synthesize imageView;
@@ -134,8 +156,6 @@
 @implementation RMImageScroller
 
 - (void) initHelper {
-    selectedImageTitleBackgroundColor = [UIColor clearColor];
-    
     recycledViews = [NSMutableSet set];
     visibleViews = [NSMutableSet set];
     
@@ -156,6 +176,7 @@
     [self addSubview:scroller];
     
     tilePrototype = [[RMScrollerTile alloc] initWithFrame:CGRectZero];
+    selectedTilePrototype = [[RMScrollerTile alloc] initWithFrame:CGRectZero];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
@@ -267,11 +288,7 @@
 
 - (void) updateSelectedTile {
     for (RMScrollerTile *view in visibleViews) {
-        if (view.index == [self selectedIndex]) {
-            view.title.backgroundColor = selectedImageTitleBackgroundColor;
-        } else {
-            view.title.backgroundColor = self.tilePrototype.title.backgroundColor;
-        }
+        [self configure:view forIndex:view.index];
     }
 }
 
@@ -289,37 +306,26 @@
 - (void) configure:(RMScrollerTile*)v forIndex:(int)index {
     v.index = index;
     v.frame = [self frameForIndex:index];
-	
-    {
-        CGRect frame = self.tilePrototype.imageView.frame;
-        v.imageView.frame = CGRectMake(frame.origin.x, frame.origin.y, self.tileWidth, frame.size.height);
-    }
-    v.imageView.image = [self imageForIndex:index];
-    v.imageView.layer.shadowColor = self.tilePrototype.imageView.layer.shadowColor;
-    v.imageView.layer.shadowOffset = self.tilePrototype.imageView.layer.shadowOffset;
-    v.imageView.layer.shadowOpacity = self.tilePrototype.imageView.layer.shadowOpacity;
-    v.imageView.layer.shadowRadius = self.tilePrototype.imageView.layer.shadowRadius;
-    v.useImageOriginY = self.tilePrototype.useImageOriginY;
     
-    v.title.frame = self.tilePrototype.title.frame;
-    v.title.hidden = self.tilePrototype.title.hidden;
-    v.title.backgroundColor = self.tilePrototype.title.backgroundColor;
-    v.title.textAlignment = self.tilePrototype.title.textAlignment;
-    v.title.layer.cornerRadius = self.tilePrototype.title.layer.cornerRadius;
-    v.title.font = self.tilePrototype.title.font;
-    v.title.textColor = self.tilePrototype.title.textColor;
-    v.useTitleOriginY = self.tilePrototype.useTitleOriginY;
+    if (index == self.selectedIndex) {
+        [v copyStyleOf:self.selectedTilePrototype];
+    } else {
+        [v copyStyleOf:self.tilePrototype];
+    }
+    
+    v.imageView.frame = CGRectMake(v.imageView.frame.origin.x, v.imageView.frame.origin.y, self.tileWidth, v.imageView.frame.size.height);
+    v.imageView.image = [self imageForIndex:index];
+
     if (!v.title.hidden) {
 		v.title.text = [self titleForIndex:index];
 	}
-    if (index == [self selectedIndex]) {
-        v.title.backgroundColor = selectedImageTitleBackgroundColor;
-    }
     
     v.button.tag = index;
 	[v.button addTarget:self action:@selector(onScrollerImageButtonTouchUpInside:) forControlEvents:UIControlEventTouchUpInside];
     
-    v.mount.image = self.spreadMode ? nil : self.tilePrototype.mount.image;
+    if (self.spreadMode) {
+        v.mount.image = nil;
+    }
     
 	[v setNeedsLayout];
 }
@@ -613,16 +619,15 @@
 	[self scrollToIndex:[self selectedIndex] animated:animated];
 }
 
-@synthesize selectedImageTitleBackgroundColor;
 @dynamic delegate;
 @synthesize hideSlider;
 @dynamic imageWidth;
 @dynamic imageHeight;
 @synthesize padding;
+@synthesize selectedTilePrototype;
 @synthesize scrollView = scroller;
 @synthesize separatorWidth;
 @synthesize spreadMode;
 @synthesize spreadFirstPageAlone;
 @synthesize tilePrototype;
-
 @end

@@ -35,13 +35,13 @@
 @property (nonatomic, assign) BOOL useTitleOriginY;
 
 - (void) recycle;
+- (void) copyStyleOf:(RMScrollerTile*)prototile;
 
 @end
 
 @interface RMImageScroller : UIView<UIScrollViewDelegate> {
 	// UI
 	UIScrollView* scroller;
-    UIColor *selectedImageTitleBackgroundColor;
 	UISlider *slider;
 	
 	// State
@@ -69,21 +69,21 @@
 @property (nonatomic, assign) int imageHeight;
 @property (nonatomic, assign) int padding;
 @property (nonatomic, readonly) UIScrollView* scrollView;
-@property (retain, nonatomic) UIColor *selectedImageTitleBackgroundColor;
 @property (nonatomic, assign) int separatorWidth;
 @property (nonatomic, getter=isSpreadFirstPageAlone) BOOL spreadFirstPageAlone;
 @property (nonatomic, assign) BOOL spreadMode;
 
 // Use tile prototype to customize the appearence of tiles
+@property (nonatomic, readonly) RMScrollerTile *selectedTilePrototype;
 @property (nonatomic, readonly) RMScrollerTile *tilePrototype;
 // Supported title prototype properties:
-// mount.image
 // imageView.frame.origin.y
 // imageView.frame.size
 // imageView.layer.shadowColor
 // imageView.layer.shadowOffset
 // imageView.layer.shadowOpacity
 // imageView.layer.shadowRadius
+// mount.image
 // title.frame.origin.y
 // title.hidden
 // title.backgroundColor
@@ -91,6 +91,9 @@
 // title.layer.cornerRadius
 // title.font
 // title.textColor
+// title.shadowColor
+// useImageOriginY
+// useTitleOriginY
 
 - (void) reloadImages;
 - (void) setSelectedIndex:(int)index;
