@@ -41,18 +41,22 @@
     scroller.imageWidth = 100; // Default value: 100
 	scroller.imageHeight = 150; // Default value: as tall as possible within the frame
 	scroller.hideSlider = NO; // Default value: NO
-    scroller.selectedImageTitleBackgroundColor = [UIColor redColor]; // Default value: [UIColor clearColor]
 	scroller.separatorWidth = 10; // Default value: 0
 	scroller.spreadFirstPageAlone = NO; // Default value: NO
 	scroller.spreadMode = NO; // Default value: NO
 
-    // scroller.tilePrototype.title.hidden = YES;
+    // Tile style
     scroller.tilePrototype.title.frame = CGRectMake(0, scroller.imageHeight + scroller.padding, scroller.imageWidth, 30);
     scroller.tilePrototype.title.backgroundColor = [UIColor blueColor];
     scroller.tilePrototype.title.textColor = [UIColor whiteColor];    
     scroller.tilePrototype.title.font = [UIFont fontWithName:@"Futura" size:18];    
     scroller.tilePrototype.title.layer.cornerRadius = 8;
-    scroller.tilePrototype.mount.image = [RMUIUtils imageWithColor:[UIColor redColor] andSize:CGSizeMake(104, 154)];
+    scroller.tilePrototype.mount.image = [RMUIUtils imageWithColor:[UIColor blueColor] andSize:CGSizeMake(scroller.imageWidth + 4, scroller.imageHeight + 4)];
+
+    // Selected tile style
+    [scroller.selectedTilePrototype copyStyleOf:scroller.tilePrototype];
+    scroller.selectedTilePrototype.title.backgroundColor = [UIColor redColor]; // Default value: [UIColor clearColor];
+    scroller.selectedTilePrototype.mount.image = [RMUIUtils imageWithColor:[UIColor redColor] andSize:CGSizeMake(scroller.imageWidth + 4, scroller.imageHeight + 4)];
 
     [self.view addSubview:scroller];
 }
