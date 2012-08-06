@@ -91,6 +91,7 @@
 // title.layer.cornerRadius
 // title.font
 // title.textColor
+// title.shadowColor
 
 - (void) reloadImages;
 - (void) setSelectedIndex:(int)index;

@@ -308,6 +308,7 @@
     v.title.layer.cornerRadius = self.tilePrototype.title.layer.cornerRadius;
     v.title.font = self.tilePrototype.title.font;
     v.title.textColor = self.tilePrototype.title.textColor;
+    v.title.shadowColor = self.tilePrototype.title.shadowColor;
     v.useTitleOriginY = self.tilePrototype.useTitleOriginY;
     if (!v.title.hidden) {
 		v.title.text = [self titleForIndex:index];
