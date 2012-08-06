@@ -41,7 +41,7 @@
     scroller.imageWidth = 100; // Default value: 100
 	scroller.imageHeight = 150; // Default value: as tall as possible within the frame
 	scroller.hideSlider = NO; // Default value: NO
-    scroller.selectedImageTitleBackgroundColor = [UIColor redColor]; // Default value: [UIColor darkGrayColor]
+    scroller.selectedImageTitleBackgroundColor = [UIColor redColor]; // Default value: [UIColor clearColor]
 	scroller.separatorWidth = 10; // Default value: 0
 	scroller.spreadFirstPageAlone = NO; // Default value: NO
 	scroller.spreadMode = NO; // Default value: NO

@@ -134,7 +134,7 @@
 @implementation RMImageScroller
 
 - (void) initHelper {
-    selectedImageTitleBackgroundColor = [UIColor darkGrayColor];
+    selectedImageTitleBackgroundColor = [UIColor clearColor];
     
     recycledViews = [NSMutableSet set];
     visibleViews = [NSMutableSet set];
