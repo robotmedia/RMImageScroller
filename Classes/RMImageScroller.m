@@ -454,7 +454,7 @@
 - (void) scrollToIndex:(int)index animated:(BOOL)animated {
 	int tileWidth = [self tileWidth];
 	int x = self.padding + (tileWidth + separatorWidth) * index;
-	x -= scroller.frame.size.width / 2 - tileWidth / 2 - separatorWidth / 2;
+	x -= scroller.frame.size.width / 2 - tileWidth / 2;
 	[scroller setContentOffset:CGPointMake(x, 0) animated:animated];
 }
 
