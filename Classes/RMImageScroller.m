@@ -32,10 +32,9 @@
 
 -(id)initWithFrame:(CGRect)aFrame{
 	if (self = [super initWithFrame:aFrame]) {
-        
-		mount = [[UIImageView alloc] initWithFrame:aFrame];
+        mount = [[UIImageView alloc] initWithFrame:aFrame];
 		[self addSubview:self.mount];
-		
+        
         imageView = [[UIImageView alloc] initWithFrame:aFrame];
 		self.imageView.backgroundColor = [UIColor clearColor];
 		self.imageView.contentMode = UIViewContentModeScaleToFill;
@@ -94,9 +93,10 @@
 - (void) recycle {}
 
 - (void) copyStyleOf:(RMScrollerTile *)prototile {
+    self.mountInFront = prototile.mountInFront;
     self.useImageOriginY = prototile.useImageOriginY;
     self.useTitleOriginY = prototile.useTitleOriginY;
-
+    
     self.imageView.frame = prototile.imageView.frame;
     self.imageView.layer.shadowColor = prototile.imageView.layer.shadowColor;
     self.imageView.layer.shadowOffset = prototile.imageView.layer.shadowOffset;
@@ -111,14 +111,26 @@
     self.title.font = prototile.title.font;
     self.title.textColor = prototile.title.textColor;
     self.title.shadowColor = prototile.title.shadowColor;
-
+    
     self.mount.image = prototile.mount.image;
+}
+
+- (void) setMountInFront:(BOOL)mountInFront {
+    _mountInFront = mountInFront;
+    if (self.mountInFront) {
+        [self bringSubviewToFront:self.mount];
+    } else {
+        [self bringSubviewToFront:self.imageView];
+    }
+    [self bringSubviewToFront:self.title];
+    [self bringSubviewToFront:self.button];
 }
 
 @synthesize button;
 @synthesize index;
 @synthesize imageView;
 @synthesize mount;
+@synthesize mountInFront = _mountInFront;
 @synthesize title;
 @synthesize useImageOriginY;
 @synthesize useTitleOriginY;
@@ -315,7 +327,7 @@
     
     v.imageView.frame = CGRectMake(v.imageView.frame.origin.x, v.imageView.frame.origin.y, self.tileWidth, v.imageView.frame.size.height);
     v.imageView.image = [self imageForIndex:index];
-
+    
     if (!v.title.hidden) {
 		v.title.text = [self titleForIndex:index];
 	}
