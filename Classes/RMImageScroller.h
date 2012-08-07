@@ -30,6 +30,7 @@
 @property (nonatomic, assign) int index;
 @property (nonatomic, readonly) UIImageView* imageView;
 @property (nonatomic, readonly) UIImageView *mount; // Image frame
+@property (nonatomic, assign) BOOL mountInFront;
 @property (nonatomic, readonly) UILabel* title;
 @property (nonatomic, assign) BOOL useImageOriginY;
 @property (nonatomic, assign) BOOL useTitleOriginY;
@@ -84,6 +85,7 @@
 // imageView.layer.shadowOpacity
 // imageView.layer.shadowRadius
 // mount.image
+// mountInFront
 // title.frame.origin.y
 // title.hidden
 // title.backgroundColor
