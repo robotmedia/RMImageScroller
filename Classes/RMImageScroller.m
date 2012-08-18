@@ -217,10 +217,13 @@
 		scrollerFrameNeedsLayout = NO; // Avoid setting the scroller frame on scroll changes
 	}
 	int count = [self tileCount];
+    if (count == 0) return; // Do nothing if there are no tiles
+    
 	int contentWidth = count * [self tileWidth];
 	contentWidth += count * separatorWidth;
 	contentWidth += self.padding * 2;
 	scroller.contentSize = CGSizeMake(contentWidth, scroller.frame.size.height);
+    
 	[self tile];
 	if (scrollerOffsetNeedsLayout) {
 		[self setSelectedIndex:selectedIndex];
@@ -232,6 +235,8 @@
 #pragma mark UIScrollViewDelegate
 
 - (void) scrollViewDidScroll:(UIScrollView *)scrollView {
+    if ([self tileCount] == 0) return; // Do nothing if there are no tiles
+    
 	[self tile];
 	if (!scrollChangeRequestedBySlider) {
 		[self updateSliderAfterScroll];
