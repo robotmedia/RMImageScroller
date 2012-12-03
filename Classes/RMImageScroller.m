@@ -413,12 +413,14 @@
 	int firstTileWidth = self.padding + tileWidth;
 	int otherTileWidth = tileWidth + separatorWidth;
 	
-	int index;
-	if (originX < firstTileWidth) {
-		index = 0;
-	} else {
-		originX -= firstTileWidth;
-		index = floorf(originX / otherTileWidth) + 1;
+	int index = 0;
+	if (originX >= firstTileWidth)
+    {
+        if (otherTileWidth > 0) // Avoid divide by 0 error on initial layout
+        {
+            originX -= firstTileWidth;
+            index = floorf(originX / otherTileWidth) + 1;
+        }
 	}
 	index = MIN(MAX(index, 0), count - 1);
 	return index;
